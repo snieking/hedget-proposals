@@ -42,15 +42,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test --passWithNoTests
+      # - name: Run tests
+      #   run: npm test
 
-      - name: Codecov
-        uses: codecov/codecov-action@v1.0.7
-        with:
-          name: PR
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage/coverage-final.json
+      # - name: Codecov
+      #   uses: codecov/codecov-action@v1.0.7
+      #   with:
+      #     name: PR
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     file: coverage/coverage-final.json
 
       - name: Build dev environment if [develop] branch
         run: npm run build
