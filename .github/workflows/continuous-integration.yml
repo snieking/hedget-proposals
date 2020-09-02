@@ -1,0 +1,77 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Continuous Integration
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Start containers
+        run: docker-compose up -d --build
+        working-directory: test
+
+      - name: Wait for startup
+        uses: jakejarvis/wait-action@master
+        with:
+          time: "15s"
+
+      - name: Add RID to .env
+        run: ./add-rid-to-env.sh
+        working-directory: test
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1.0.7
+        with:
+          name: PR
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/coverage-final.json
+
+      - name: Build dev environment if [develop] branch
+        run: npm run build
+        if: github.ref == 'refs/heads/develop'
+
+      - uses: chrislennon/action-aws-cli@v1.1
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Deploy to S3 [develop] Bucket
+        shell: bash
+        run: aws s3 sync . s3://dev.proposia.com/ --follow-symlinks --delete --cache-control max-age=600
+        working-directory: build
+        if: github.ref == 'refs/heads/develop'
+
+      - name: Invalidate Cloudfront [dev] caches
+        shell: bash
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID_DEV }} --paths "/*"
+        if: github.ref == 'refs/heads/develop'

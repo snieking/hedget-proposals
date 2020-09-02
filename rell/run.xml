@@ -1,0 +1,23 @@
+<run wipe-db="false">
+    <nodes>
+        <config src="config/node-config.properties" add-signers="true" />
+    </nodes>
+    <chains>
+        <chain name="user" iid="1">
+            <config height="0">
+                <app module="">
+                	<args module="lib.ft3.core">
+                		<arg key="my_blockchain_name"><string>Chromunity</string></arg>
+                		<arg key="my_blockchain_website"><string>testnet.chromunity.com</string></arg>
+                		<arg key="my_blockchain_description"><string>Decentralized reddit</string></arg>
+                		
+                		<arg key="rate_limit_active"><int>1</int></arg>
+                  		<arg key="rate_limit_max_points"><int>10</int></arg>
+                  		<arg key="rate_limit_recovery_time"><int>30000</int></arg>
+                  		<arg key="rate_limit_points_at_account_creation"><int>5</int></arg>
+                	</args>
+                </app>
+            </config>
+        </chain>
+    </chains>
+</run>
