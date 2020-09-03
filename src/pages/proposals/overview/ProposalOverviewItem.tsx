@@ -43,6 +43,7 @@ const useStyles = makeStyles({
     top: -8,
     left: 2,
     maxWidth: '2ch',
+    marginLeft: '2px',
   },
 });
 
@@ -71,7 +72,7 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
           <ScheduleIcon />
           <Typography variant="body2" component="span" className={classes.iconText}>
             {hoursFromNow(props.proposal.endTimestamp)} hours remaining
-            </Typography>
+          </Typography>
         </div>
       );
     }
@@ -80,7 +81,7 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
   };
 
   return (
-    <Link className={classes.link} to={`/${props.proposal.app}/proposal/${props.proposal.id}`}>
+    <Link className={classes.link} to={`/proposal/${props.proposal.id}`}>
       <div className={classes.wrapper}>
         <div>
           <StatusChip status={props.proposal.status} className={classes.chip} />

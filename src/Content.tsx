@@ -1,8 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
 import { makeStyles } from '@material-ui/core';
-import AppSelector from './pages/app-selector/AppSelector';
-import AppProposals from './pages/apps/AppProposals';
+import AppProposals from './pages/proposals/overview/AppProposals';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -18,8 +17,7 @@ const Content: React.FunctionComponent = () => {
   return (
     <div className={classes.wrapper}>
       <Switch>
-        <Route exact path="/" component={AppSelector} />
-        <Route path="/:appName" component={AppProposals} />
+        <Route exact path="/" component={AppProposals} />
       </Switch>
     </div>
   );

@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
 import CategoryIcon from '@material-ui/icons/Category';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { ProposalOverview } from '../../core/services/proposals.model';
-import ProposalOverviewList from './proposals/ProposalOverviewList';
-import { getProposals } from '../../core/services/proposals.service';
-import { COLOR_STEEL_BLUE, COLOR_CHROMIA_DARK } from '../../core/dynamic-theme/DefaultTheme';
-
-interface MatchParams {
-  appName: string;
-}
+import { ProposalOverview } from '../../../core/services/proposals.model';
+import { getProposals } from '../../../core/services/proposals.service';
+import { COLOR_STEEL_BLUE, COLOR_CHROMIA_DARK } from '../../../core/dynamic-theme/DefaultTheme';
+import ProposalOverviewList from './ProposalOverviewList';
 
 const useStyles = makeStyles({
   filterPanel: {
@@ -40,21 +35,15 @@ const useStyles = makeStyles({
   },
 });
 
-const AppProposals: React.FunctionComponent<RouteComponentProps<MatchParams>> = (props) => {
+const AppProposals: React.FunctionComponent = () => {
   const classes = useStyles();
 
-  const [app, setApp] = useState<string>();
+  const app = 'hedget';
   const [proposals, setProposals] = useState<ProposalOverview[]>([]);
   const [includeCore, setIncludeCore] = useState(true);
   const [includeCommunity, setIncludeCommunity] = useState(true);
   const [includeCompleted, setIncludeCompleted] = useState(true);
   const [includeInProgress, setIncludeInProgress] = useState(true);
-
-  useEffect(() => {
-    const { appName } = props.match.params;
-    setApp(appName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     let categoryFilter = '';
@@ -72,7 +61,7 @@ const AppProposals: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
     }
 
     getProposals(app, categoryFilter, statusFilter).then((p) => setProposals(p));
-  }, [app, includeCore, includeCommunity, includeCompleted, includeInProgress]);
+  }, [includeCore, includeCommunity, includeCompleted, includeInProgress]);
 
   return (
     <div>

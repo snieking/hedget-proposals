@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import { ProposalOverview } from '../../../core/services/proposals.model';
 import ProposalOverviewItem from './ProposalOverviewItem';
+import { ProposalOverview } from '../../../core/services/proposals.model';
 
 interface Props {
   proposals: ProposalOverview[];

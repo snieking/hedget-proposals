@@ -1,12 +1,24 @@
 import React from 'react';
-import { Typography, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = makeStyles({
   wrapper: {
+    margin: '0 auto',
     textAlign: 'center',
     cursor: 'pointer',
     textDecoration: 'none',
+    width: '100%',
+  },
+  image: {
+    margin: '0 auto',
+    marginTop: '15px',
+    textAlign: 'center',
+    display: 'block',
+    height: '60%',
+  },
+  text: {
+    display: 'inline',
   },
 });
 
@@ -15,9 +27,7 @@ const Logo: React.FunctionComponent = () => {
 
   return (
     <RouterLink className={classes.wrapper} to="/">
-      <Typography variant="h1" component="h1">
-        Proposia
-      </Typography>
+      <img src="/assets/hedget-logo.png" alt="Hedget logo" className={classes.image} />
     </RouterLink>
   );
 };
