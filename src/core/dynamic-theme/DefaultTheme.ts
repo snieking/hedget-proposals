@@ -11,17 +11,19 @@ export const COLOR_ORANGE = '#FF702B';
 export const COLOR_STEEL_BLUE = '#4D617D';
 export const COLOR_PURPLE = '#CC91F0';
 export const COLOR_SOFT_PINK = '#FFB0C2';
-export const COLOR_YELLOW = '#FFB500';
+export const COLOR_YELLOW = '#F8C749';
 export const COLOR_OFF_WHITE = '#FFF8F8';
+export const COLOR_HEDGET_GREEN = '#4ACEA5';
+export const COLOR_HEDGET_OFF_GREEN = '#66D5B1';
 
 export const lightTheme = createMuiTheme({
   palette: {
     type: 'light',
     primary: {
-      main: COLOR_STEEL_BLUE,
+      main: COLOR_HEDGET_GREEN,
     },
     secondary: {
-      main: COLOR_SOFT_PINK,
+      main: COLOR_YELLOW,
     },
     background: { default: COLOR_CHROMIA_LIGHTER },
   },
@@ -33,23 +35,23 @@ export const lightTheme = createMuiTheme({
       paper: {
         background: COLOR_OFF_WHITE,
         border: 'solid 1px',
-        borderColor: COLOR_STEEL_BLUE,
+        borderColor: COLOR_HEDGET_GREEN,
       },
     },
     MuiTextField: {
       root: {
         '& label.Mui-focused': {
-          color: COLOR_STEEL_BLUE,
+          color: COLOR_HEDGET_GREEN,
         },
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: COLOR_STEEL_BLUE,
+            borderColor: COLOR_HEDGET_GREEN,
           },
           '&:hover fieldset': {
             borderColor: COLOR_RED,
           },
           '&.Mui-focused fieldset': {
-            borderColor: COLOR_STEEL_BLUE,
+            borderColor: COLOR_HEDGET_GREEN,
           },
           color: COLOR_CHROMIA_DARK,
         },
@@ -69,23 +71,23 @@ export const lightTheme = createMuiTheme({
         color: COLOR_CHROMIA_DARKER,
       },
       subtitle2: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_CHROMIA_DARK,
       },
       caption: {
         color: COLOR_YELLOW,
       },
       h1: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_CHROMIA_DARK,
         fontFamily: '"Battlefin", "International", "Roboto", "Helvetica", "Arial", "sans-serif"',
         fontSize: '32px',
         paddingTop: '20px',
       },
       h5: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_CHROMIA_DARK,
         fontFamily: '"Battlefin", "International", "Roboto", "Helvetica", "Arial", "sans-serif"',
       },
       h6: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_CHROMIA_DARK,
         fontFamily: '"Battlefin", "International", "Roboto", "Helvetica", "Arial", "sans-serif"',
       },
       body1: {
@@ -100,6 +102,7 @@ export const lightTheme = createMuiTheme({
       },
       gutterBottom: {
         marginBottom: 0,
+        color: COLOR_CHROMIA_DARK,
       },
       colorInherit: {
         color: 'none',
@@ -118,17 +121,17 @@ export const lightTheme = createMuiTheme({
     },
     MuiListItemIcon: {
       root: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_HEDGET_GREEN,
       },
     },
     MuiIconButton: {
       colorInherit: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_HEDGET_GREEN,
       },
     },
     MuiDivider: {
       root: {
-        backgroundColor: COLOR_STEEL_BLUE,
+        backgroundColor: COLOR_HEDGET_GREEN,
       },
     },
     MuiPaper: {
@@ -144,7 +147,7 @@ export const lightTheme = createMuiTheme({
     },
     MuiSvgIcon: {
       root: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_CHROMIA_DARK,
       },
     },
     MuiLink: {
@@ -166,7 +169,7 @@ export const lightTheme = createMuiTheme({
     },
     MuiSelect: {
       icon: {
-        color: COLOR_STEEL_BLUE,
+        color: COLOR_HEDGET_GREEN,
       },
     },
     MuiChip: {

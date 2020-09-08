@@ -11,6 +11,7 @@ import {
   COLOR_CHROMIA_DARKER,
   COLOR_CHROMIA_LIGHT,
 } from '../../../core/dynamic-theme/DefaultTheme';
+import { hoursFromNow, formatedAuthor } from '../util';
 
 interface Props {
   proposal: ProposalOverview;
@@ -50,19 +51,6 @@ const useStyles = makeStyles({
 const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
-  const hoursFromNow = (time: number) => {
-    const diffInMillis = time - Date.now();
-    const seconds = diffInMillis / 1000;
-    const minutes = seconds / 60;
-    const hours = minutes / 60;
-
-    return Math.ceil(hours);
-  };
-
-  const formatedAuthor = () => {
-    return `${props.proposal.author.substring(0, 5)}...${props.proposal.author.substring(27, 32)}`;
-  };
-
   const getTimeDetail = () => {
     const currentTime = Date.now();
 
@@ -93,7 +81,7 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
           <div className={classes.detail}>
             <PersonIcon />
             <Typography variant="body2" component="span" className={classes.iconText}>
-              {formatedAuthor()}
+              {formatedAuthor(props.proposal.author)}
             </Typography>
           </div>
           <div className={classes.detail}>

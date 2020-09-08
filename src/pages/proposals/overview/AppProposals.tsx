@@ -4,7 +4,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { ProposalOverview } from '../../../core/services/proposals.model';
 import { getProposals } from '../../../core/services/proposals.service';
-import { COLOR_STEEL_BLUE, COLOR_CHROMIA_DARK } from '../../../core/dynamic-theme/DefaultTheme';
+import { COLOR_CHROMIA_DARK, COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
 import ProposalOverviewList from './ProposalOverviewList';
 
 const useStyles = makeStyles({
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
     cursor: 'pointer',
   },
   clicked: {
-    color: COLOR_STEEL_BLUE,
+    color: COLOR_HEDGET_GREEN,
     fontWeight: 'bold',
   },
   separator: {

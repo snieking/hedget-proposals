@@ -8,3 +8,12 @@ export interface ProposalOverview {
   startTimestamp: number;
   endTimestamp: number;
 }
+
+export interface Proposal extends ProposalOverview {
+  description: string;
+}
+
+export interface PollOption {
+  option: string;
+  votes: number;
+}
