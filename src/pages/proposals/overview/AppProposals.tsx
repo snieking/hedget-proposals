@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, makeStyles } from '@material-ui/core';
+import { Typography, makeStyles, Grid, IconButton } from '@material-ui/core';
 import CategoryIcon from '@material-ui/icons/Category';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import { ProposalOverview } from '../../../core/services/proposals.model';
 import { getProposals } from '../../../core/services/proposals.service';
-import { COLOR_CHROMIA_DARK, COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
+import { COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
 import ProposalOverviewList from './ProposalOverviewList';
+import AddProposal from './AddProposal';
 
 const useStyles = makeStyles({
   filterPanel: {
     marginBottom: '10px',
   },
   filterIcon: {
-    color: COLOR_CHROMIA_DARK,
     position: 'relative',
     top: 5,
-    marginLeft: '20px',
   },
   filterOption: {
     fontWeight: 'bold',
@@ -44,6 +44,32 @@ const AppProposals: React.FunctionComponent = () => {
   const [includeCommunity, setIncludeCommunity] = useState(true);
   const [includeCompleted, setIncludeCompleted] = useState(true);
   const [includeInProgress, setIncludeInProgress] = useState(true);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+
+  function refreshProposals() {
+    let categoryFilter = '';
+    if (!includeCommunity) {
+      categoryFilter = 'Core';
+    } else if (!includeCore) {
+      categoryFilter = 'Community';
+    }
+
+    let statusFilter = '';
+    if (!includeCompleted) {
+      statusFilter = 'In Progress';
+    } else if (!includeInProgress) {
+      statusFilter = 'Completed';
+    }
+    getProposals(app, categoryFilter, statusFilter).then((p) => setProposals(p));
+  }
+
+  function openAddProposalDialog() {
+    setAddDialogOpen(true);
+  }
+
+  function closeAddProposalDialog() {
+    setAddDialogOpen(false);
+  }
 
   useEffect(() => {
     let categoryFilter = '';
@@ -59,78 +85,83 @@ const AppProposals: React.FunctionComponent = () => {
     } else if (!includeInProgress) {
       statusFilter = 'Completed';
     }
-
     getProposals(app, categoryFilter, statusFilter).then((p) => setProposals(p));
+
   }, [includeCore, includeCommunity, includeCompleted, includeInProgress]);
 
   return (
     <div>
-      <div className={classes.filterPanel}>
-        <Typography variant="body1" component="span" className={classes.filterOption}>
-          Filters
-        </Typography>
-        <CategoryIcon className={classes.filterIcon} />
-        <Typography
-          variant="body2"
-          component="span"
-          className={`${classes.optionItem} ${includeCommunity ? classes.clickable : ''} ${
-            includeCore ? classes.clicked : ''
-          }`}
-          onClick={() => {
-            if (includeCommunity) {
-              setIncludeCore(!includeCore);
-            }
-          }}
-        >
-          Core
-        </Typography>
-        <span className={classes.separator}>•</span>
-        <Typography
-          variant="body2"
-          component="span"
-          className={`${classes.optionItem} ${includeCore ? classes.clickable : ''} ${
-            includeCommunity ? classes.clicked : ''
-          }`}
-          onClick={() => {
-            if (includeCore) {
-              setIncludeCommunity(!includeCommunity);
-            }
-          }}
-        >
-          Community
-        </Typography>
-        <CheckCircleIcon className={classes.filterIcon} />
-        <Typography
-          variant="body2"
-          component="span"
-          className={`${classes.optionItem} ${includeInProgress ? classes.clickable : ''} ${
-            includeCompleted ? classes.clicked : ''
-          }`}
-          onClick={() => {
-            if (includeInProgress) {
-              setIncludeCompleted(!includeCompleted);
-            }
-          }}
-        >
-          Completed
-        </Typography>
-        <span className={classes.separator}>•</span>
-        <Typography
-          variant="body2"
-          component="span"
-          className={`${classes.optionItem} ${includeCompleted ? classes.clickable : ''} ${
-            includeInProgress ? classes.clicked : ''
-          }`}
-          onClick={() => {
-            if (includeCompleted) {
-              setIncludeInProgress(!includeInProgress);
-            }
-          }}
-        >
-          In Progress
-        </Typography>
-      </div>
+      <Grid container className={classes.filterPanel}>
+        <Grid item md={8} sm={12}>
+          <CategoryIcon className={classes.filterIcon} />
+          <Typography
+            variant="body2"
+            component="span"
+            className={`${classes.optionItem} ${includeCommunity ? classes.clickable : ''} ${
+              includeCore ? classes.clicked : ''
+              }`}
+            onClick={() => {
+              if (includeCommunity) {
+                setIncludeCore(!includeCore);
+              }
+            }}
+          >
+            Core
+          </Typography>
+          <span className={classes.separator}>•</span>
+          <Typography
+            variant="body2"
+            component="span"
+            className={`${classes.optionItem} ${includeCore ? classes.clickable : ''} ${
+              includeCommunity ? classes.clicked : ''
+              }`}
+            onClick={() => {
+              if (includeCore) {
+                setIncludeCommunity(!includeCommunity);
+              }
+            }}
+          >
+            Community
+          </Typography>
+          <CheckCircleIcon className={classes.filterIcon} style={{ marginLeft: '20px' }} />
+          <Typography
+            variant="body2"
+            component="span"
+            className={`${classes.optionItem} ${includeInProgress ? classes.clickable : ''} ${
+              includeCompleted ? classes.clicked : ''
+              }`}
+            onClick={() => {
+              if (includeInProgress) {
+                setIncludeCompleted(!includeCompleted);
+              }
+            }}
+          >
+            Completed
+          </Typography>
+          <span className={classes.separator}>•</span>
+          <Typography
+            variant="body2"
+            component="span"
+            className={`${classes.optionItem} ${includeCompleted ? classes.clickable : ''} ${
+              includeInProgress ? classes.clicked : ''
+              }`}
+            onClick={() => {
+              if (includeCompleted) {
+                setIncludeInProgress(!includeInProgress);
+              }
+            }}
+          >
+            In Progress
+          </Typography>
+        </Grid>
+        <Grid item md={4} sm={12}>
+          <IconButton onClick={openAddProposalDialog}>
+            <NoteAddIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
       <ProposalOverviewList proposals={proposals} />
+      <AddProposal open={addDialogOpen} onClose={closeAddProposalDialog} refreshProposals={refreshProposals} />
     </div>
   );
 };

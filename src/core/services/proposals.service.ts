@@ -78,3 +78,16 @@ export function getProposalPollOptions(app: string, id: string): Promise<PollOpt
     },
   ]);
 }
+
+export function createNewProposal(app: string, title: string, description: string) {
+  proposalOverviewMock.push({
+    app,
+    id: 'HGET-5',
+    title,
+    status: 'In Progress',
+    category: 'Community',
+    author: '0x583A78bA1f6b25E29fbBC8Cd1BFA29A51520De84',
+    startTimestamp: Date.now(),
+    endTimestamp: Date.now() + 1000 * 60 * 60 * 24 * 3,
+  });
+}
