@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 import { Router } from 'react-router-dom';
 import { Store } from 'redux';
@@ -12,9 +12,11 @@ import config from './config';
 import history from './history';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
+import { checkAuthorized } from './core/redux/account/account.actions';
 
 interface Props {
   store: Store<ApplicationState>;
+  checkAuthorized: typeof checkAuthorized;
 }
 
 const piwik = config.matomo.enabled
@@ -28,6 +30,10 @@ const piwik = config.matomo.enabled
   : null;
 
 const App: React.FunctionComponent<Props> = (props) => {
+  useEffect(() => {
+    props.checkAuthorized();
+  }, [props]);
+
   return (
     <Provider store={props.store}>
       <DynamicTheme>
@@ -42,4 +48,8 @@ const App: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-export default App;
+const mapDispatchToProps = {
+  checkAuthorized,
+};
+
+export default connect(null, mapDispatchToProps)(App);

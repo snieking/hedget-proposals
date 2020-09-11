@@ -79,6 +79,10 @@ export function getProposalPollOptions(app: string, id: string): Promise<PollOpt
   ]);
 }
 
+export function voteForOptionInPoll(app: string, id: string, option: string) {
+
+}
+
 export function createNewProposal(app: string, title: string, description: string) {
   proposalOverviewMock.push({
     app,
