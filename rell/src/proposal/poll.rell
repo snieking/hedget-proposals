@@ -23,6 +23,7 @@ operation vote_for_option_in_poll(pubkey, id: name, option: text) {
 	val user = account.retrieve_verified_user(pubkey);
 	val the_poll = poll@{ .proposal.id == id };
 	
+	// TODO: Calculate number of votes based on account tokens
 	create poll_vote(the_poll, user, poll_option@{ .text == option }, 1);
 }
 
