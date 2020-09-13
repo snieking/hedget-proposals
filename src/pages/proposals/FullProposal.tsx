@@ -39,8 +39,6 @@ const useStyles = makeStyles({
   },
 });
 
-const app = 'hedget';
-
 const FullProposal: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   const [proposal, setProposal] = useState<Proposal>();
@@ -49,8 +47,8 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
 
   useEffect(() => {
     if (props.match.params.id) {
-      getFullProposal(app, props.match.params.id).then((p) => setProposal(p));
-      getProposalPollOptions(app, props.match.params.id).then((o) => setPollOptions(o));
+      getFullProposal(props.match.params.id).then((p) => setProposal(p));
+      getProposalPollOptions(props.match.params.id).then((o) => setPollOptions(o));
     }
   }, [props]);
 
@@ -72,7 +70,7 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
     if (answer) {
       answer.votes++;
       setOptionVote(answer.option);
-      voteForOptionInPoll(app, proposal.id, answer.option);
+      voteForOptionInPoll(props.pubKey, props.privKey, proposal.id, answer.option);
     }
   }
 

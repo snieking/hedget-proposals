@@ -1,0 +1,22 @@
+import account;
+
+entity id_counter {
+	key name;
+	mutable id: integer = 1;
+}
+
+operation create_app(pubkey, name, prefix: name) {
+	val user = account.retrieve_verified_user(pubkey);
+	require(account.is_admin(user), 'Only an admin can create an app');
+
+	create id_counter('HGET');
+}
+
+function get_and_increment_id(): integer {
+	val counter = id_counter@{ .name == 'HGET' };
+	val id = counter.id;
+	
+	update counter(id = id + 1);
+	
+	return id;
+}

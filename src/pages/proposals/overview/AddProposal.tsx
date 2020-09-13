@@ -21,7 +21,7 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
   const [description, setDescription] = useState('');
 
   function createProposal() {
-    createNewProposal('hedget', title, description);
+    createNewProposal('', '', title, description);
     props.onClose();
     props.refreshProposals();
   }

@@ -1,0 +1,50 @@
+import account;
+
+entity poll {
+	key proposal;
+}
+
+entity poll_option {
+	key text;
+}
+
+entity poll_vote {
+	key poll, account.user;
+	poll_option;
+	amount: integer;
+}
+
+struct poll_option_votes {
+	text;
+	votes: integer;
+}
+
+operation vote_for_option_in_poll(pubkey, id: name, option: text) {
+	val user = account.retrieve_verified_user(pubkey);
+	val the_poll = poll@{ .proposal.id == id };
+	
+	create poll_vote(the_poll, user, poll_option@{ .text == option }, 1);
+}
+
+query get_poll_proposal_options(id: name) {
+	var the_poll = poll@{ .proposal.id == id };
+	var votes = poll_vote@*{ .poll == the_poll };
+	
+	var vote_map = map<name, integer>();
+	
+	for (vote in votes) {
+		var option = vote.poll_option.text;
+		if (vote_map.contains(option)) {
+			vote_map.put(option, vote_map.get(option) + vote.amount);
+		} else {
+			vote_map.put(option, vote.amount);
+		}
+	}
+	
+	var results = list<poll_option_votes>();
+	for (option in vote_map.keys()) {
+		results.add(poll_option_votes(option, vote_map.get(option)));
+	}
+	
+	return results;
+}

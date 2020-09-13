@@ -38,7 +38,6 @@ const useStyles = makeStyles({
 const AppProposals: React.FunctionComponent = () => {
   const classes = useStyles();
 
-  const app = 'hedget';
   const [proposals, setProposals] = useState<ProposalOverview[]>([]);
   const [includeCore, setIncludeCore] = useState(true);
   const [includeCommunity, setIncludeCommunity] = useState(true);
@@ -60,7 +59,7 @@ const AppProposals: React.FunctionComponent = () => {
     } else if (!includeInProgress) {
       statusFilter = 'Completed';
     }
-    getProposals(app, categoryFilter, statusFilter).then((p) => setProposals(p));
+    getProposals(categoryFilter, statusFilter).then((p) => setProposals(p));
   }
 
   function openAddProposalDialog() {
@@ -85,8 +84,7 @@ const AppProposals: React.FunctionComponent = () => {
     } else if (!includeInProgress) {
       statusFilter = 'Completed';
     }
-    getProposals(app, categoryFilter, statusFilter).then((p) => setProposals(p));
-
+    getProposals(categoryFilter, statusFilter).then((p) => setProposals(p));
   }, [includeCore, includeCommunity, includeCompleted, includeInProgress]);
 
   return (
@@ -99,7 +97,7 @@ const AppProposals: React.FunctionComponent = () => {
             component="span"
             className={`${classes.optionItem} ${includeCommunity ? classes.clickable : ''} ${
               includeCore ? classes.clicked : ''
-              }`}
+            }`}
             onClick={() => {
               if (includeCommunity) {
                 setIncludeCore(!includeCore);
@@ -114,7 +112,7 @@ const AppProposals: React.FunctionComponent = () => {
             component="span"
             className={`${classes.optionItem} ${includeCore ? classes.clickable : ''} ${
               includeCommunity ? classes.clicked : ''
-              }`}
+            }`}
             onClick={() => {
               if (includeCore) {
                 setIncludeCommunity(!includeCommunity);
@@ -129,7 +127,7 @@ const AppProposals: React.FunctionComponent = () => {
             component="span"
             className={`${classes.optionItem} ${includeInProgress ? classes.clickable : ''} ${
               includeCompleted ? classes.clicked : ''
-              }`}
+            }`}
             onClick={() => {
               if (includeInProgress) {
                 setIncludeCompleted(!includeCompleted);
@@ -144,7 +142,7 @@ const AppProposals: React.FunctionComponent = () => {
             component="span"
             className={`${classes.optionItem} ${includeCompleted ? classes.clickable : ''} ${
               includeInProgress ? classes.clicked : ''
-              }`}
+            }`}
             onClick={() => {
               if (includeCompleted) {
                 setIncludeInProgress(!includeInProgress);

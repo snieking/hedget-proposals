@@ -1,0 +1,116 @@
+import app;
+import account;
+
+entity proposal {
+	key id: name;
+	title: text;
+	category: text;
+	author: account.user;
+	startTimestamp: integer;
+	endTimestamp: integer;
+	description: text;
+}
+
+operation create_proposal(pubkey, appName: name, title: text, description: text) {
+	val user = account.retrieve_verified_user(pubkey);
+	
+	val numeric_id = app.get_and_increment_id();
+	val id = 'HGET-' + numeric_id;
+	
+	var category = 'Community';
+	if (account.is_core_user(user)) {
+		category = 'Core';
+	}
+	
+	create proposal(
+		id,
+		title, 
+		category,
+		author = user,
+		startTimestamp = op_context.last_block_time,
+		endTimestamp = op_context.last_block_time + days_in_millis(3),
+		description
+	);
+}
+
+query get_all_proposals(appName: name) {
+	return proposal@*{} (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_proposals_by_category(category: name) {
+	return proposal@*{ .category == category } (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_proposals_ending_after_timestamp(timestamp: integer) {
+	return proposal@*{ .endTimestamp > timestamp } (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_proposals_ended_before_timestamp(timestamp: integer) {
+	return proposal@*{ .endTimestamp < timestamp } (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_proposals_by_category_ending_after_timestamp(category: name, timestamp: integer) {
+	return proposal@*{ .category == category, .endTimestamp > timestamp } (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_proposals_by_category_ended_before_timestamp(category: name, timestamp: integer) {
+	return proposal@*{ .category == category, .endTimestamp < timestamp } (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_full_proposal(id: name) {
+	return proposal@{ .id == id } (
+		.id,
+		.title,
+		.category,
+		author = .author.pubkey,
+		.startTimestamp,
+		.endTimestamp,
+		.description
+	);
+}
+
+function days_in_millis(days: integer): integer {
+	return 1000 * 60 * 60 * 24 * days;
+}
