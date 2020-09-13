@@ -1,0 +1,7 @@
+entity user {
+	key pubkey;
+}
+
+entity core_user {
+	key user;
+}
