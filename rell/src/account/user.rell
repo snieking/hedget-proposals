@@ -2,6 +2,10 @@ entity user {
 	key pubkey;
 }
 
+entity admin {
+	key user;
+}
+
 entity core_user {
 	key user;
 }
