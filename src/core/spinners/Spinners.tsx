@@ -9,9 +9,7 @@ interface Props {
 }
 
 const useStyles = makeStyles({
-  wrapper: {
-
-  },
+  wrapper: {},
 });
 
 const Spinners: React.FunctionComponent<Props> = (props) => {
