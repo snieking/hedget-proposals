@@ -1,10 +1,11 @@
+import { KeyPair } from '../../../shared/types';
+
 export enum AccountActionTypes {
   CHECK_AUTHORIZED = 'ACCOUNT/CHECK_AUTHORIZED',
-  SET_KEYS = 'ACCOUNT/SET_KEYS',
+  CREATE_KEY_PAIR = 'ACCOUNT/SET_KEYS',
 }
 
 export interface AccountState {
   isChecked: boolean;
-  pubKey: string;
-  privKey: string;
+  keyPair: KeyPair;
 }

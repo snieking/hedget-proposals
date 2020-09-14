@@ -4,4 +4,4 @@ import { withPayloadType } from '../util';
 
 export const checkAuthorized = createAction(AccountActionTypes.CHECK_AUTHORIZED);
 
-export const setKeys = createAction(AccountActionTypes.SET_KEYS, withPayloadType<string>());
+export const createKeyPairFromPrivateKey = createAction(AccountActionTypes.CREATE_KEY_PAIR, withPayloadType<string>());

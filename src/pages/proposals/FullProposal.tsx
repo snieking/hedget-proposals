@@ -13,14 +13,14 @@ import StatusChip from '../../shared/StatusChip';
 import PollOptionStats from './poll/PollOptionStats';
 import PollVoteOption from './poll/PollVoteOption';
 import ApplicationState from '../../core/redux/application-state';
+import { KeyPair } from '../../shared/types';
 
 interface MatchParams {
   id: string;
 }
 
 interface Props extends RouteComponentProps<MatchParams> {
-  privKey: string;
-  pubKey: string;
+  keyPair: KeyPair;
 }
 
 const useStyles = makeStyles({
@@ -70,7 +70,7 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
     if (answer) {
       answer.votes++;
       setOptionVote(answer.option);
-      voteForOptionInPoll(props.pubKey, props.privKey, proposal.id, answer.option);
+      voteForOptionInPoll(props.keyPair, proposal.id, answer.option);
     }
   }
 
@@ -123,7 +123,7 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
           </div>
         </Grid>
         <Grid item sm={12} md={6}>
-          {props.privKey != null ? renderPollOptions() : renderPollStats(total)}
+          {props.keyPair != null ? renderPollOptions() : renderPollStats(total)}
         </Grid>
       </Grid>
     </div>
@@ -132,8 +132,7 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
 
 const mapStateToProps = (store: ApplicationState) => {
   return {
-    privKey: store.account.privKey,
-    pubKey: store.account.pubKey,
+    keyPair: store.account.keyPair,
   };
 };
 

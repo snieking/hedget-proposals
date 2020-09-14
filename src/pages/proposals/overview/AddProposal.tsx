@@ -8,10 +8,14 @@ import {
   Button,
   Dialog,
 } from '@material-ui/core';
+import { connect } from 'react-redux';
 import { createNewProposal } from '../../../core/services/proposals.service';
+import { KeyPair } from '../../../shared/types';
+import ApplicationState from '../../../core/redux/application-state';
 
 interface Props {
   open: boolean;
+  keyPair: KeyPair;
   onClose: () => void;
   refreshProposals: () => void;
 }
@@ -21,7 +25,7 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
   const [description, setDescription] = useState('');
 
   function createProposal() {
-    createNewProposal('', '', title, description);
+    createNewProposal(props.keyPair, title, description);
     props.onClose();
     props.refreshProposals();
   }
@@ -69,4 +73,10 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-export default AddProposal;
+const mapStateToProps = (store: ApplicationState) => {
+  return {
+    keyPair: store.account.keyPair,
+  };
+};
+
+export default connect(mapStateToProps)(AddProposal);

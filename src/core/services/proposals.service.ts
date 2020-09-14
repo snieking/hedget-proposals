@@ -2,6 +2,7 @@ import { ProposalOverview, Proposal, PollOption } from './proposals.model';
 import { Transaction } from '../blockchain/Transaction';
 import { Operation } from '../blockchain/Operation';
 import { query } from '../blockchain/blockchain-helper';
+import { KeyPair } from '../../shared/types';
 
 export function getProposals(categoryFilter: string, statusFilter: string): Promise<ProposalOverview[]> {
   if (!categoryFilter && !statusFilter) return query('get_all_proposals', {});
@@ -36,17 +37,17 @@ export function getProposalPollOptions(id: string): Promise<PollOption[]> {
   return query('get_poll_proposal_options', { id });
 }
 
-export function voteForOptionInPoll(pubKey: string, privKey: string, id: string, option: string) {
+export function voteForOptionInPoll(keyPair: KeyPair, id: string, option: string) {
   return Transaction.create()
-    .addOperation(new Operation('vote_for_option_in_poll', [pubKey, id, option]))
-    .sign(privKey, pubKey)
+    .addOperation(new Operation('vote_for_option_in_poll', [keyPair.pubkey, id, option]))
+    .sign(keyPair.privkey, keyPair.pubkey)
     .confirm();
 }
 
-export function createNewProposal(pubKey: string, privKey: string, title: string, description: string) {
+export function createNewProposal(keyPair: KeyPair, title: string, description: string) {
   return Transaction.create()
     .addNop()
-    .addOperation(new Operation('create_proposal', [pubKey, title, description]))
-    .sign(privKey, pubKey)
+    .addOperation(new Operation('create_proposal', [keyPair.pubkey, title, description]))
+    .sign(keyPair.privkey, keyPair.pubkey)
     .confirm();
 }

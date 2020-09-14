@@ -1,11 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { AccountState } from './account.state';
-import { checkAuthorized, setKeys } from './account.actions';
+import { checkAuthorized, createKeyPairFromPrivateKey } from './account.actions';
 
 const initialAccountState: AccountState = {
   isChecked: false,
-  pubKey: null,
-  privKey: null,
+  keyPair: null,
 };
 
 export const accountReducer = createReducer(initialAccountState, (builder) => {
@@ -13,8 +12,10 @@ export const accountReducer = createReducer(initialAccountState, (builder) => {
     .addCase(checkAuthorized, (state) => {
       state.isChecked = true;
     })
-    .addCase(setKeys, (state, action) => {
-      state.privKey = action.payload;
-      state.pubKey = '';
+    .addCase(createKeyPairFromPrivateKey, (state, action) => {
+      state.keyPair = {
+        privkey: action.payload,
+        pubkey: '',
+      };
     });
 });
