@@ -1,7 +1,8 @@
 import React from 'react';
-import { IconButton, makeStyles } from '@material-ui/core';
+import { IconButton, makeStyles, Modal } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import About from './About';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -15,11 +16,24 @@ const useStyles = makeStyles({
 const NavigationIcons: React.FunctionComponent = () => {
   const classes = useStyles();
 
+  const [infoOpen, setInfoOpen] = React.useState(false);
+
+  const toggleOpenInfo = () => {
+    setInfoOpen(true);
+  };
+
+  const handleCloseInfo = () => {
+    setInfoOpen(false);
+  };
+
   return (
     <div className={classes.wrapper}>
-      <IconButton>
+      <IconButton onClick={toggleOpenInfo}>
         <InfoIcon className={classes.icon} />
       </IconButton>
+      <Modal open={infoOpen} onClose={handleCloseInfo}>
+        <About />
+      </Modal>
       <IconButton>
         <VpnKeyIcon />
       </IconButton>
