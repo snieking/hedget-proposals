@@ -8,7 +8,12 @@ import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
-import { getFullProposal, getProposalPollOptions, voteForOptionInPoll } from '../../core/services/proposals.service';
+import {
+  getFullProposal,
+  getProposalPollOptions,
+  getProposalPollVote,
+  voteForOptionInPoll
+} from '../../core/services/proposals.service';
 import StatusChip from '../../shared/StatusChip';
 import PollOptionStats from './poll/PollOptionStats';
 import PollVoteOption from './poll/PollVoteOption';
@@ -47,8 +52,13 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
     }
   }, [props]);
 
+  useEffect(() => {
+    if (!optionVote && pollOptions && accountState.isChecked && accountState.accountDetail) {
+      getProposalPollVote(accountState, props.match.params.id).then((vote) => setOptionVote(vote));
+    }
+  }, [optionVote, pollOptions, accountState, props]);
+
   function renderPollStats(total: number) {
-    console.log(pollOptions);
     return pollOptions.map((option) => (
       <PollOptionStats
         key={option.text}
@@ -71,7 +81,9 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
   }
 
   function renderPollOptions() {
-    return pollOptions.map((option) => <PollVoteOption text={option.text} voteHandler={voteForOption} />);
+    return pollOptions.map((option) => (
+      <PollVoteOption key={option.text} text={option.text} voteHandler={voteForOption} />
+    ));
   }
 
   if (!proposal || !pollOptions) return null;
@@ -119,7 +131,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
           </div>
         </Grid>
         <Grid item sm={12} md={6}>
-          {accountState.isChecked && accountState.accountDetail ? renderPollOptions() : renderPollStats(total)}
+          {accountState.isChecked && accountState.accountDetail && !optionVote ? renderPollOptions() : renderPollStats(total)}
         </Grid>
       </Grid>
     </div>

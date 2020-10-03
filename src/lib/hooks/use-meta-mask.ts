@@ -6,6 +6,7 @@ import Web3 from 'web3';
 import MessageSigner from '../message-signer';
 import Staker from '../staker';
 import HGET from '../hget';
+import logger from "../../shared/logger";
 
 interface LoginAPI {
   contracts: { staker: Staker; hget: HGET };
@@ -49,7 +50,7 @@ export default function useMetaMask(): MetamaskInfo {
             stakeState: await staker.getStakeState(_selectedAddress),
           });
         } catch (error) {
-          console.log(error);
+          logger.error(error);
         }
 
         _provider.on('accountsChanged', () => {

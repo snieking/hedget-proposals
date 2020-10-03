@@ -64,7 +64,7 @@ const StakeMain: React.FunctionComponent = () => {
     }
   }, [initialized, loginAPI]);
 
-  console.log(loginAPI?.stakeState);
+  logger.info(`Stake state: ${loginAPI?.stakeState}`);
 
   async function login(stakeUntilDate: number) {
     const wasLoading = loading;
@@ -83,7 +83,6 @@ const StakeMain: React.FunctionComponent = () => {
       });
 
       logger.info(`Login response: ${response}`);
-      console.log(response);
       if (response.status === 'SUCCESS') {
         const accountID = util.sha256(selectedAddress.toLowerCase()).toString('hex');
         // yes, accountID is sha256 of selected address text

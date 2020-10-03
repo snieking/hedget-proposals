@@ -17,9 +17,7 @@ function makeOrLoadKeyPair(): KeyPair {
 }
 
 function getStoredAccountDetail(): AccountDetail | undefined {
-  console.log("Retrieving account details");
   if ('hp_valid_until' in localStorage) {
-    console.log("is valid!");
     return {
       validUntil: parseInt(localStorage.hp_valid_until),
       accountID: localStorage.hp_account_id,
@@ -29,9 +27,7 @@ function getStoredAccountDetail(): AccountDetail | undefined {
 }
 
 function storeAccountDetail(ad: AccountDetail) {
-  // eslint-disable-next-line @typescript-eslint/camelcase
   localStorage.hp_valid_until = ad.validUntil;
-  // eslint-disable-next-line @typescript-eslint/camelcase
   localStorage.hp_account_id = ad.accountID;
 }
 

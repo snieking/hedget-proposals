@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import { ProposalOverview, Proposal, PollOption } from './proposals.model';
 import { Transaction } from '../blockchain/Transaction';
 import { Operation } from '../blockchain/Operation';
@@ -37,6 +39,10 @@ export function getProposalPollOptions(id: string): Promise<PollOption[]> {
   return query('get_poll_proposal_options', { id });
 }
 
+export function getProposalPollVote(accountState: AccountState, proposalId: string): Promise<string> {
+  return query('get_poll_vote', { account_id: accountState.accountDetail.accountID, id: proposalId });
+}
+
 export async function voteForOptionInPoll(accountState: AccountState, id: string, option: string) {
   return Transaction.create()
     .addOperation(addAuthToOperation(accountState, new Operation('vote_for_option_in_poll', [id, option])))
@@ -47,8 +53,7 @@ export async function voteForOptionInPoll(accountState: AccountState, id: string
 export function createNewProposal(accountState: AccountState, title: string, description: string) {
   return Transaction.create()
     .addNop()
-    .addOperation(addAuthToOperation(accountState,
-      new Operation('create_proposal', ['HGET', title, description])))
+    .addOperation(addAuthToOperation(accountState, new Operation('create_proposal', ['HGET', title, description])))
     .sign(accountState.keyPair)
     .confirm();
 }

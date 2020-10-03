@@ -45,3 +45,7 @@ query get_poll_proposal_options(id: name) {
 	
 	return results;
 }
+
+query get_poll_vote(id: name, account_id: byte_array) {
+	return poll_vote@?{ .poll.proposal.id == id, account.eth_account@{ .account.id == account_id } } ( .poll_option.text );
+}
