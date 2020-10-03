@@ -1,8 +1,9 @@
 import StakerContract from '../abi/Staker.json';
+import * as config from '../config';
 
 export default class Staker {
   constructor(web3) {
-    this.contract = new web3.eth.Contract(StakerContract.abi, process.env.REACT_APP_STAKER_CONTRACT_ADDRESS);
+    this.contract = new web3.eth.Contract(StakerContract.abi, config.eth.stakerContractAddress);
   }
 
   async getStakeState(address) {

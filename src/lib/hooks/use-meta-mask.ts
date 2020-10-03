@@ -51,11 +51,11 @@ export default function useMetaMask(): MetamaskInfo {
         } catch (error) {
           console.log(error);
         }
-      }
 
-      _provider.on('accountsChanged', () => {
-        window.location.reload();
-      });
+        _provider.on('accountsChanged', () => {
+          window.location.reload();
+        });
+      }
     };
     initMetaMask();
   }, [provider, selectedAddress]);
@@ -72,6 +72,6 @@ export default function useMetaMask(): MetamaskInfo {
     haveAccounts,
     loginAPI,
     selectedAddress,
-    updateStakeState
+    updateStakeState,
   };
 }

@@ -10,6 +10,7 @@ import {
   CircularProgress,
   Box,
   Paper,
+  makeStyles,
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { util } from 'postchain-client';
@@ -17,8 +18,28 @@ import { POST } from './lib/util';
 import useMetaMask from './lib/hooks/use-meta-mask';
 import ApplicationState from './core/redux/application-state';
 import { setAccountDetail } from './core/redux/account/account.actions';
+import * as config from './config';
+import logger from "./shared/logger";
+
+const useStyles = makeStyles({
+  description: {
+    margin: '10px',
+  },
+  textInput: {
+    marginRight: '5px',
+  },
+  button: {
+    top: '8px',
+    marginLeft: '5px',
+  },
+  errorMessage: {
+    marginTop: '10px',
+    fontWeight: 'bold',
+  },
+});
 
 const StakeMain: React.FunctionComponent = () => {
+  const classes = useStyles();
   const { loginAPI, haveAccounts, selectedAddress, provider, updateStakeState } = useMetaMask();
   const [stakeAmount, setStakeAmount] = React.useState(10);
   const [duration, setDuration] = React.useState(7);
@@ -35,7 +56,7 @@ const StakeMain: React.FunctionComponent = () => {
   React.useEffect(() => {
     if (!initialized && loginAPI) {
       if (loginAPI.stakeState != null) {
-        const remainingDuration = (Date.now()/1000 - loginAPI.stakeState.until) / (86400);
+        const remainingDuration = (Date.now() / 1000 - loginAPI.stakeState.until) / 86400;
         setDuration(Math.max(remainingDuration, 7));
         setStakeAmount(Math.max(loginAPI.stakeState.amount, 10));
       }
@@ -56,11 +77,12 @@ const StakeMain: React.FunctionComponent = () => {
       const loginMessage = `Please sign your public key '${pubkey}' in order to login`;
       const signature = await loginAPI.messageSigner.sign(selectedAddress, loginMessage);
 
-      const response = await POST(`${process.env.REACT_APP_AUTH_SERVER_URL}/login`, {
+      const response = await POST(`${config.authServer.url}/login`, {
         signature,
         pubkey,
       });
 
+      logger.info(`Login response: ${response}`);
       console.log(response);
       if (response.status === 'SUCCESS') {
         const accountID = util.sha256(selectedAddress.toLowerCase()).toString('hex');
@@ -75,7 +97,7 @@ const StakeMain: React.FunctionComponent = () => {
         setStakeError('Login server failed, please try later');
       }
     } catch (e) {
-      setStakeError(`Unexpected error: ${e.toString()}`);
+      setStakeError(`Error: ${e.message}`);
     }
     if (!wasLoading) setLoading(false);
   }
@@ -101,7 +123,7 @@ const StakeMain: React.FunctionComponent = () => {
       await updateStakeState();
       await login(stakeUntilDate);
     } catch (e) {
-      setStakeError('Unexpected error:' + e.toString());
+      setStakeError(`Error: ${e.message}`);
     }
     setLoading(false);
   }
@@ -110,7 +132,7 @@ const StakeMain: React.FunctionComponent = () => {
     return (
       <Grid container spacing={4}>
         {(!loginAPI?.stakeState || !loginAPI.stakeState.isFresh) && (
-          <Typography variant="h4">
+          <Typography variant="body2" className={classes.description}>
             You need to stake HGET tokens to cast a vote. Staking freezes tokens for a certain duration. Minimum amount
             to stake is 10 HGET, minimum duration is 7 days. Tokens shall be frozen for at least 7 days from the moment
             a vote is cast.
@@ -145,31 +167,40 @@ const StakeMain: React.FunctionComponent = () => {
           </Grid>
         )}
         <Grid item container>
-          <TextField
-            variant="outlined"
-            label="Amount to stake"
-            type="number"
-            value={stakeAmount}
-            inputProps={{ min: 10 }}
-            onChange={(e) => setStakeAmount(parseInt(e.target.value))}
-          />
-          <TextField
-            variant="outlined"
-            label="Duration"
-            type="number"
-            value={duration}
-            inputProps={{ min: 7 }}
-            onChange={(e) => setDuration(parseInt(e.target.value))}
-          />
-          <Button variant="contained" color="primary" onClick={() => stake()} disabled={loading}>
-            Stake
-            {loading && <CircularProgress />}
-          </Button>
-          {stakeError && (
-            <Typography variant="h4" color="error">
-              {stakeError}
-            </Typography>
-          )}
+          <div>
+            <TextField
+              variant="outlined"
+              label="Amount to stake"
+              type="number"
+              value={stakeAmount}
+              inputProps={{ min: 10 }}
+              onChange={(e) => setStakeAmount(parseInt(e.target.value))}
+              className={classes.textInput}
+            />
+            <TextField
+              variant="outlined"
+              label="Duration"
+              type="number"
+              value={duration}
+              inputProps={{ min: 7 }}
+              onChange={(e) => setDuration(parseInt(e.target.value))}
+              className={classes.textInput}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => stake()}
+              disabled={loading}
+              className={classes.button}
+            >
+              {loading ? <CircularProgress size={24} /> : <span>Stake</span>}
+            </Button>
+            {stakeError && (
+              <Typography variant="body2" color="error" className={classes.errorMessage}>
+                {stakeError}
+              </Typography>
+            )}
+          </div>
         </Grid>
       </Grid>
     );
@@ -187,7 +218,7 @@ const StakeMain: React.FunctionComponent = () => {
           Please connect MetaMask
         </Typography>
       )}
-      {provider && haveAccounts && selectedAddress && !loginAPI && (
+      {initialized && provider && haveAccounts && selectedAddress && !loginAPI && (
         <Typography color="error" variant="h3">
           Error while initializing
         </Typography>

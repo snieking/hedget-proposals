@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
-import {
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  DialogActions,
-  Button,
-  Dialog,
-} from '@material-ui/core';
-import {connect, useSelector} from 'react-redux';
-import { KeyPair } from 'ft3-lib';
+import { DialogTitle, DialogContent, TextField, DialogActions, Button, Dialog } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import { createNewProposal } from '../../../core/services/proposals.service';
 import ApplicationState from '../../../core/redux/application-state';
 

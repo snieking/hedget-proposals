@@ -3,13 +3,14 @@ import { Typography, makeStyles, Grid, IconButton } from '@material-ui/core';
 import CategoryIcon from '@material-ui/icons/Category';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import { useSelector } from 'react-redux';
 import { ProposalOverview } from '../../../core/services/proposals.model';
 import { getProposals } from '../../../core/services/proposals.service';
 import { COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
 import ProposalOverviewList from './ProposalOverviewList';
 import AddProposal from './AddProposal';
-import {useSelector} from "react-redux";
-import ApplicationState from "../../../core/redux/application-state";
+import ApplicationState from '../../../core/redux/application-state';
+import Stake from '../../../Stake';
 
 const useStyles = makeStyles({
   filterPanel: {
@@ -46,6 +47,7 @@ const AppProposals: React.FunctionComponent = () => {
   const [includeCompleted, setIncludeCompleted] = useState(true);
   const [includeInProgress, setIncludeInProgress] = useState(true);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = React.useState(false);
   const accountState = useSelector((state: ApplicationState) => state.account);
 
   function refreshProposals() {
@@ -66,7 +68,11 @@ const AppProposals: React.FunctionComponent = () => {
   }
 
   function openAddProposalDialog() {
-    setAddDialogOpen(true);
+    if (accountState.accountDetail && accountState.accountDetail.validUntil > Date.now()) {
+      setAddDialogOpen(true);
+    } else {
+      setLoginOpen(true);
+    }
   }
 
   function closeAddProposalDialog() {
@@ -74,20 +80,8 @@ const AppProposals: React.FunctionComponent = () => {
   }
 
   useEffect(() => {
-    let categoryFilter = '';
-    if (!includeCommunity) {
-      categoryFilter = 'Core';
-    } else if (!includeCore) {
-      categoryFilter = 'Community';
-    }
-
-    let statusFilter = '';
-    if (!includeCompleted) {
-      statusFilter = 'In Progress';
-    } else if (!includeInProgress) {
-      statusFilter = 'Completed';
-    }
-    getProposals(categoryFilter, statusFilter).then((p) => setProposals(p));
+    refreshProposals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [includeCore, includeCommunity, includeCompleted, includeInProgress]);
 
   return (
@@ -156,13 +150,12 @@ const AppProposals: React.FunctionComponent = () => {
           </Typography>
         </Grid>
         <Grid item md={4} sm={12}>
-          {accountState.accountDetail ? (
+          {accountState.accountDetail && (
             <IconButton onClick={openAddProposalDialog}>
-              <NoteAddIcon color="primary" fontSize="large" />
+              <NoteAddIcon fontSize="large" />
             </IconButton>
-          ) : (
-            <p>Log in to create a proposal</p>
           )}
+          <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />
         </Grid>
       </Grid>
       <ProposalOverviewList proposals={proposals} />

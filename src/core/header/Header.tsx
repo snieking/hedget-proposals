@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Grid, Typography} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import Logo from './Logo';
 import NavigationIcons from './NavigationIcons';
 
@@ -12,9 +12,6 @@ const Header: React.FunctionComponent<unknown> = () => {
         </Grid>
         <Grid item xs={4}>
           <NavigationIcons />
-        </Grid>
-        <Grid item xs={12}>
-          <Container><Typography variant="h4">Proposals</Typography></Container>
         </Grid>
       </Grid>
     </>

@@ -1,15 +1,16 @@
 import HGETContract from '../abi/HGET.json';
+import * as config from '../config';
 
 export default class HGET {
   constructor(web3) {
-    this.contract = new web3.eth.Contract(HGETContract.abi, process.env.REACT_APP_HGET_CONTRACT_ADDRESS);
+    this.contract = new web3.eth.Contract(HGETContract.abi, config.eth.hgetContractAddress);
   }
 
   getAllowance(selectedAddress) {
-    return this.contract.methods.allowance(selectedAddress, process.env.REACT_APP_STAKER_CONTRACT_ADDRESS).call();
+    return this.contract.methods.allowance(selectedAddress, config.eth.stakerContractAddress).call();
   }
 
   async approve(selectedAddress, amount) {
-    await this.contract.methods.approve(process.env.REACT_APP_STAKER_CONTRACT_ADDRESS, amount).send({ from: selectedAddress });
+    await this.contract.methods.approve(config.eth.stakerContractAddress, amount).send({ from: selectedAddress });
   }
 }

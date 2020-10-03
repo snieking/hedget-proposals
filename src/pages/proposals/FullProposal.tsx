@@ -6,8 +6,7 @@ import TimerIcon from '@material-ui/icons/Timer';
 import EventIcon from '@material-ui/icons/Event';
 import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
-import {connect, useSelector} from 'react-redux';
-import { KeyPair } from 'ft3-lib';
+import { useSelector } from 'react-redux';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
 import { getFullProposal, getProposalPollOptions, voteForOptionInPoll } from '../../core/services/proposals.service';
 import StatusChip from '../../shared/StatusChip';
@@ -41,7 +40,6 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
   const [optionVote, setOptionVote] = useState<string>();
   const accountState = useSelector((state: ApplicationState) => state.account);
 
-  console.log("FULL PROPOSAL", props);
   useEffect(() => {
     if (props.match.params.id) {
       getFullProposal(props.match.params.id).then((p) => setProposal(p));

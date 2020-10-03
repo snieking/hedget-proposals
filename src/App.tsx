@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { Provider, connect } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
@@ -12,14 +12,12 @@ import config from './config';
 import history from './history';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
-import { checkAuthorized } from './core/redux/account/account.actions';
 
 interface Props {
   store: Store<ApplicationState>;
 }
 
-const piwik: any = null;
-/*config.matomo.enabled
+const piwik: any = config.matomo.enabled
   ? new ReactPiwik({
       url: config.matomo.url,
       siteId: config.matomo.siteId,
@@ -27,13 +25,9 @@ const piwik: any = null;
       jsFilename: config.matomo.jsFileName,
       phpFilename: config.matomo.phpFilename,
     })
-  : null;*/
+  : null;
 
 const App: React.FunctionComponent<Props> = (props) => {
-  useEffect(() => {
-    console.log(props.store);
-  }, [props]);
-
   return (
     <Provider store={props.store}>
       <DynamicTheme>
@@ -47,8 +41,5 @@ const App: React.FunctionComponent<Props> = (props) => {
     </Provider>
   );
 };
-
-
-console.log('PROCESS ENV', process.env);
 
 export default connect(null)(App);
