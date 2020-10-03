@@ -5,12 +5,12 @@ entity poll {
 }
 
 entity poll_option {
-	key text;
+	key poll, text;
 }
 
 entity poll_vote {
-	key poll, account.user;
-	poll_option;
+	key poll, account.eth_account;
+	index poll, poll_option;
 	amount: integer;
 }
 
@@ -19,12 +19,11 @@ struct poll_option_votes {
 	votes: integer;
 }
 
-operation vote_for_option_in_poll(pubkey, id: name, option: text) {
-	val user = account.retrieve_verified_user(pubkey);
+operation vote_for_option_in_poll(account_id: byte_array, auth_descriptor_id: byte_array, id: name, option: text) {
+	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
 	val the_poll = poll@{ .proposal.id == id };
 	
-	// TODO: Calculate number of votes based on account tokens
-	create poll_vote(the_poll, user, poll_option@{ .text == option }, 1);
+	create poll_vote(the_poll, user, poll_option@{ .text == option }, account.eth_account_state @ {user} .staked_amount);
 }
 
 query get_poll_proposal_options(id: name) {
@@ -32,14 +31,11 @@ query get_poll_proposal_options(id: name) {
 	var votes = poll_vote@*{ .poll == the_poll };
 	
 	var vote_map = map<name, integer>();
+	for (po in poll_option @* { the_poll }) vote_map.put(po.text, 0);
 	
 	for (vote in votes) {
 		var option = vote.poll_option.text;
-		if (vote_map.contains(option)) {
-			vote_map.put(option, vote_map.get(option) + vote.amount);
-		} else {
-			vote_map.put(option, vote.amount);
-		}
+		vote_map[option] += vote.amount;
 	}
 	
 	var results = list<poll_option_votes>();

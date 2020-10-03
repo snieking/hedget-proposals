@@ -6,6 +6,7 @@
     "jest": true
   },
   "rules": {
+    "no-underscore-dangle": "off",
     "camelcase": "off",
     "no-bitwise": "off",
     "react/destructuring-assignment": "off",

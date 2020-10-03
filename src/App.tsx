@@ -16,10 +16,10 @@ import { checkAuthorized } from './core/redux/account/account.actions';
 
 interface Props {
   store: Store<ApplicationState>;
-  checkAuthorized: typeof checkAuthorized;
 }
 
-const piwik = config.matomo.enabled
+const piwik: any = null;
+/*config.matomo.enabled
   ? new ReactPiwik({
       url: config.matomo.url,
       siteId: config.matomo.siteId,
@@ -27,11 +27,11 @@ const piwik = config.matomo.enabled
       jsFilename: config.matomo.jsFileName,
       phpFilename: config.matomo.phpFilename,
     })
-  : null;
+  : null;*/
 
 const App: React.FunctionComponent<Props> = (props) => {
   useEffect(() => {
-    props.checkAuthorized();
+    console.log(props.store);
   }, [props]);
 
   return (
@@ -48,8 +48,7 @@ const App: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-const mapDispatchToProps = {
-  checkAuthorized,
-};
 
-export default connect(null, mapDispatchToProps)(App);
+console.log('PROCESS ENV', process.env);
+
+export default connect(null)(App);

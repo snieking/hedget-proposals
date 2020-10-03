@@ -8,14 +8,13 @@ import {
   Button,
   Dialog,
 } from '@material-ui/core';
-import { connect } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
+import { KeyPair } from 'ft3-lib';
 import { createNewProposal } from '../../../core/services/proposals.service';
-import { KeyPair } from '../../../shared/types';
 import ApplicationState from '../../../core/redux/application-state';
 
 interface Props {
   open: boolean;
-  keyPair: KeyPair;
   onClose: () => void;
   refreshProposals: () => void;
 }
@@ -23,9 +22,10 @@ interface Props {
 const AddProposal: React.FunctionComponent<Props> = (props) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const accountState = useSelector((state: ApplicationState) => state.account);
 
-  function createProposal() {
-    createNewProposal(props.keyPair, title, description);
+  async function createProposal() {
+    await createNewProposal(accountState, title, description);
     props.onClose();
     props.refreshProposals();
   }
@@ -34,9 +34,6 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
     <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>New Proposal</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          To subscribe to this website, please enter your email address here. We will send updates occasionally.
-        </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
@@ -73,10 +70,4 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-const mapStateToProps = (store: ApplicationState) => {
-  return {
-    keyPair: store.account.keyPair,
-  };
-};
-
-export default connect(mapStateToProps)(AddProposal);
+export default AddProposal;

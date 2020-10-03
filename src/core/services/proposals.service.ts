@@ -1,8 +1,8 @@
 import { ProposalOverview, Proposal, PollOption } from './proposals.model';
 import { Transaction } from '../blockchain/Transaction';
 import { Operation } from '../blockchain/Operation';
-import { query } from '../blockchain/blockchain-helper';
-import { KeyPair } from '../../shared/types';
+import { addAuthToOperation, query } from '../blockchain/blockchain-helper';
+import { AccountState } from '../redux/account/account.state';
 
 export function getProposals(categoryFilter: string, statusFilter: string): Promise<ProposalOverview[]> {
   if (!categoryFilter && !statusFilter) return query('get_all_proposals', {});
@@ -37,17 +37,18 @@ export function getProposalPollOptions(id: string): Promise<PollOption[]> {
   return query('get_poll_proposal_options', { id });
 }
 
-export function voteForOptionInPoll(keyPair: KeyPair, id: string, option: string) {
+export async function voteForOptionInPoll(accountState: AccountState, id: string, option: string) {
   return Transaction.create()
-    .addOperation(new Operation('vote_for_option_in_poll', [keyPair.pubkey, id, option]))
-    .sign(keyPair.privkey, keyPair.pubkey)
+    .addOperation(addAuthToOperation(accountState, new Operation('vote_for_option_in_poll', [id, option])))
+    .sign(accountState.keyPair)
     .confirm();
 }
 
-export function createNewProposal(keyPair: KeyPair, title: string, description: string) {
+export function createNewProposal(accountState: AccountState, title: string, description: string) {
   return Transaction.create()
     .addNop()
-    .addOperation(new Operation('create_proposal', [keyPair.pubkey, title, description]))
-    .sign(keyPair.privkey, keyPair.pubkey)
+    .addOperation(addAuthToOperation(accountState,
+      new Operation('create_proposal', ['HGET', title, description])))
+    .sign(accountState.keyPair)
     .confirm();
 }

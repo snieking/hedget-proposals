@@ -1,4 +1,4 @@
-import { Grid, IconButton, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Grid, IconButton, makeStyles } from '@material-ui/core';
 import React from 'react';
 import GitInfo from 'react-git-info/macro';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 const gitInfo = GitInfo();
 
-const About: React.FunctionComponent = () => {
+const About: React.FunctionComponent<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
   const classes = useStyles();
 
   function formatDate(date: Date) {
@@ -54,16 +54,19 @@ const About: React.FunctionComponent = () => {
   }
 
   return (
-    <div className={classes.paper}>
-      <IconButton href="https://github.com/snieking/hedget-proposals">
-        <GitHubIcon />
-      </IconButton>
-      <Grid container>
-        {detail('Block height', '0')}
-        {detail('Updated', formatDate(new Date(gitInfo.commit.date)))}
-        {detail('Commit', gitInfo.commit.shortHash)}
-      </Grid>
-    </div>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Information</DialogTitle>
+      <DialogContent>
+        <IconButton href="https://github.com/snieking/hedget-proposals">
+          <GitHubIcon />
+        </IconButton>
+        <Grid container>
+          {detail('Block height', '0')}
+          {detail('Updated', formatDate(new Date(gitInfo.commit.date)))}
+          {detail('Commit', gitInfo.commit.shortHash)}
+        </Grid>
+      </DialogContent>
+    </Dialog>
   );
 };
 

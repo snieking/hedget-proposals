@@ -5,16 +5,18 @@ entity proposal {
 	key id: name;
 	title: text;
 	category: text;
-	author: account.user;
+	author: account.eth_account;
 	startTimestamp: integer;
 	endTimestamp: integer;
 	description: text;
 }
 
-operation create_proposal(pubkey, appName: name, title: text, description: text) {
-	val user = account.retrieve_verified_user(pubkey);
+operation create_proposal(account_id: byte_array, auth_descriptor_id: byte_array, 
+	appName: name, title: text, description: text
+) {
+	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
 	
-	val numeric_id = app.get_and_increment_id();
+	val numeric_id = app.get_and_increment_id(appName);
 	val id = 'HGET-' + numeric_id;
 	
 	var category = 'Community';
@@ -22,7 +24,7 @@ operation create_proposal(pubkey, appName: name, title: text, description: text)
 		category = 'Core';
 	}
 	
-	create proposal(
+	val proposal = create proposal(
 		id,
 		title, 
 		category,
@@ -31,14 +33,17 @@ operation create_proposal(pubkey, appName: name, title: text, description: text)
 		endTimestamp = op_context.last_block_time + days_in_millis(3),
 		description
 	);
+	val poll = create poll (proposal);
+	create poll_option ( poll, "yes" );
+	create poll_option ( poll, "no" );
 }
 
-query get_all_proposals(appName: name) {
+query get_all_proposals() {
 	return proposal@*{} (
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		@sort_desc .endTimestamp
 	);
@@ -49,7 +54,7 @@ query get_proposals_by_category(category: name) {
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		@sort_desc .endTimestamp
 	);
@@ -60,7 +65,7 @@ query get_proposals_ending_after_timestamp(timestamp: integer) {
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		@sort_desc .endTimestamp
 	);
@@ -71,7 +76,7 @@ query get_proposals_ended_before_timestamp(timestamp: integer) {
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		@sort_desc .endTimestamp
 	);
@@ -82,7 +87,7 @@ query get_proposals_by_category_ending_after_timestamp(category: name, timestamp
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		@sort_desc .endTimestamp
 	);
@@ -93,7 +98,7 @@ query get_proposals_by_category_ended_before_timestamp(category: name, timestamp
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		@sort_desc .endTimestamp
 	);
@@ -104,7 +109,7 @@ query get_full_proposal(id: name) {
 		.id,
 		.title,
 		.category,
-		author = .author.pubkey,
+		author = .author.address,
 		.startTimestamp,
 		.endTimestamp,
 		.description

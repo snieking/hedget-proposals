@@ -1,12 +1,14 @@
-function retrieve_verified_user(pubkey): user {
-	require(is_signer(pubkey), 'Incorrect signature for provided pubkey');
-	return user@{ pubkey };
+import lib.ft3.account. { auth_and_log};
+
+function is_admin(eth_account): boolean {
+	return false;
 }
 
-function is_admin(user): boolean {
-	return admin@?{ user } != null;
+function is_core_user(eth_account): boolean {
+	return false;
+	//return core_user@?{ user } != null;
 }
 
-function is_core_user(user): boolean {
-	return core_user@?{ user } != null;
+function retrieve_verified_user(account_id: byte_array, auth_descriptor_id: byte_array): eth_account {
+	return eth_account @ { auth_and_log(account_id, auth_descriptor_id, ["T"]) };	
 }

@@ -14,6 +14,6 @@ export interface Proposal extends ProposalOverview {
 }
 
 export interface PollOption {
-  option: string;
+  text: string;
   votes: number;
 }

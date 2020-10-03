@@ -8,6 +8,8 @@ import { getProposals } from '../../../core/services/proposals.service';
 import { COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
 import ProposalOverviewList from './ProposalOverviewList';
 import AddProposal from './AddProposal';
+import {useSelector} from "react-redux";
+import ApplicationState from "../../../core/redux/application-state";
 
 const useStyles = makeStyles({
   filterPanel: {
@@ -44,6 +46,7 @@ const AppProposals: React.FunctionComponent = () => {
   const [includeCompleted, setIncludeCompleted] = useState(true);
   const [includeInProgress, setIncludeInProgress] = useState(true);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const accountState = useSelector((state: ApplicationState) => state.account);
 
   function refreshProposals() {
     let categoryFilter = '';
@@ -153,9 +156,13 @@ const AppProposals: React.FunctionComponent = () => {
           </Typography>
         </Grid>
         <Grid item md={4} sm={12}>
-          <IconButton onClick={openAddProposalDialog}>
-            <NoteAddIcon />
-          </IconButton>
+          {accountState.accountDetail ? (
+            <IconButton onClick={openAddProposalDialog}>
+              <NoteAddIcon color="primary" fontSize="large" />
+            </IconButton>
+          ) : (
+            <p>Log in to create a proposal</p>
+          )}
         </Grid>
       </Grid>
       <ProposalOverviewList proposals={proposals} />
