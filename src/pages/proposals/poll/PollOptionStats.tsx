@@ -26,7 +26,14 @@ const useStyles = makeStyles({
     zIndex: 9999,
   },
   percentage: {
+    marginRight: '10px',
+  },
+  tokens: {
     marginRight: '20px',
+    fontStyle: 'italic',
+  },
+  option: {
+    fontWeight: 'bold',
   },
 });
 
@@ -63,7 +70,8 @@ const PollOptionStats: React.FunctionComponent<Props> = (props) => {
         <div className={classes.textWrapper}>
           <Typography id={props.text} className={classes.text} style={{ minWidth: width * 0.7 }} gutterBottom>
             <span className={classes.percentage}>{Math.round(percentageOfVotes)}%</span>
-            <span>{props.text}</span>
+            <span className={classes.tokens}>({props.votes} HGET)</span>
+            <span className={classes.option}>{props.text}</span>
           </Typography>
         </div>
       </div>

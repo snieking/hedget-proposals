@@ -18,6 +18,8 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
   async function createProposal() {
     await createNewProposal(accountState, title, description);
     props.onClose();
+    setTitle('');
+    setDescription('');
     props.refreshProposals();
   }
 

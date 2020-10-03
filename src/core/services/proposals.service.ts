@@ -6,11 +6,21 @@ import { Operation } from '../blockchain/Operation';
 import { addAuthToOperation, query } from '../blockchain/blockchain-helper';
 import { AccountState } from '../redux/account/account.state';
 
+function addStatus<T extends ProposalOverview>(proposal: T): T {
+  return {
+    ...proposal,
+    status: proposal.endTimestamp > Date.now() ? 'In Progress' : 'Completed',
+  };
+}
+
 export function getProposals(categoryFilter: string, statusFilter: string): Promise<ProposalOverview[]> {
-  if (!categoryFilter && !statusFilter) return query('get_all_proposals', {});
+  if (!categoryFilter && !statusFilter)
+    return query('get_all_proposals', {}).then((proposals: ProposalOverview[]) => proposals.map((p) => addStatus(p)));
 
   if (!statusFilter) {
-    return query('get_proposals_by_category', { category: categoryFilter });
+    return query('get_proposals_by_category', { category: categoryFilter }).then((proposals: ProposalOverview[]) =>
+      proposals.map((p) => addStatus(p))
+    );
   }
 
   if (!categoryFilter) {
@@ -22,17 +32,17 @@ export function getProposals(categoryFilter: string, statusFilter: string): Prom
     return query('get_proposals_by_category_ending_after_timestamp', {
       category: categoryFilter,
       timestamp: Date.now(),
-    });
+    }).then((proposals: ProposalOverview[]) => proposals.map((p) => addStatus(p)));
 
   if (statusFilter === 'Completed')
     return query('get_proposals_by_category_ended_before_timestamp', {
       category: categoryFilter,
       timestamp: Date.now(),
-    });
+    }).then((proposals: ProposalOverview[]) => proposals.map((p) => addStatus(p)));
 }
 
 export function getFullProposal(id: string): Promise<Proposal> {
-  return query('get_full_proposal', { id });
+  return query('get_full_proposal', { id }).then((p: Proposal) => addStatus(p));
 }
 
 export function getProposalPollOptions(id: string): Promise<PollOption[]> {
@@ -54,6 +64,14 @@ export function createNewProposal(accountState: AccountState, title: string, des
   return Transaction.create()
     .addNop()
     .addOperation(addAuthToOperation(accountState, new Operation('create_proposal', ['HGET', title, description])))
+    .sign(accountState.keyPair)
+    .confirm();
+}
+
+export function deleteProposal(accountState: AccountState, id: string) {
+  return Transaction.create()
+    .addNop()
+    .addOperation(addAuthToOperation(accountState, new Operation('delete_proposal', [id])))
     .sign(accountState.keyPair)
     .confirm();
 }

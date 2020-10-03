@@ -1,14 +1,21 @@
 import lib.ft3.account. { auth_and_log};
 
-function is_admin(eth_account): boolean {
-	return false;
+function require_auth_server () {
+	require(is_signer(chain_context.args.auth_server_pubkey), "Not signed by the auth server");
 }
 
-function is_core_user(eth_account): boolean {
-	return false;
-	//return core_user@?{ user } != null;
+function require_admin () {
+	require(is_signer(chain_context.args.admin_pubkey), "Not signed by the admin key");
 }
 
-function retrieve_verified_user(account_id: byte_array, auth_descriptor_id: byte_array): eth_account {
+function require_core_user(eth_account) {
+	require(_is_core_user(eth_account), "Not a core user");
+}
+
+function _is_core_user (eth_account): boolean {
+	return core_user @? { eth_account } != null;
+}
+
+function retrieve_verified_user (account_id: byte_array, auth_descriptor_id: byte_array): eth_account {
 	return eth_account @ { auth_and_log(account_id, auth_descriptor_id, ["T"]) };	
 }

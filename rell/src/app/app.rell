@@ -5,21 +5,21 @@ entity id_counter {
 	mutable id: integer = 1;
 }
 
-operation create_app(name, prefix: name) {
+operation create_app (name, prefix: name) {
 	account.require_admin();
-	create id_counter(name);
+	create id_counter (name);
 }
 
-function get_and_increment_id(name): integer {
+function get_and_increment_id (name): integer {
 	// auto-register HGET so we don't need to bother with admin
 	if (name == 'HGET' and
 		empty(id_counter @? { name })
 	) create id_counter (name);	
 	
-	val counter = id_counter@{ .name == name };
+	val counter = id_counter @{ .name == name };
 	val id = counter.id;
 	
-	update counter(id = id + 1);
+	update counter (id = id + 1);
 	
 	return id;
 }

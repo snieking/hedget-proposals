@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     marginTop: '15px',
     textAlign: 'center',
     display: 'block',
-    height: '60%',
+    height: '50%',
   },
   text: {
     display: 'inline',

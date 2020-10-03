@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Store } from 'redux';
 // import ReactPiwik from 'react-piwik';
 import DynamicTheme from './core/dynamic-theme/DynamicTheme';
@@ -12,9 +12,14 @@ import Spinners from './core/spinners/Spinners';
 // import history from './history';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
+import { AccountDetail } from './core/redux/account/account.state';
+import { checkAmountStaked, checkCoreAccount } from './core/redux/account/account.actions';
 
 interface Props {
   store: Store<ApplicationState>;
+  accountDetail: AccountDetail;
+  checkCoreAccount: typeof checkCoreAccount;
+  checkAmountStaked: typeof checkAmountStaked;
 }
 
 // const piwik = config.matomo.enabled
@@ -28,6 +33,13 @@ interface Props {
 //   : null;
 
 const App: React.FunctionComponent<Props> = (props) => {
+  useEffect(() => {
+    if (props.accountDetail) {
+      props.checkCoreAccount();
+      props.checkAmountStaked();
+    }
+  }, [props]);
+
   return (
     <Provider store={props.store}>
       <DynamicTheme>
@@ -42,4 +54,15 @@ const App: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-export default App;
+const mapStateToProps = (store: ApplicationState) => {
+  return {
+    accountDetail: store.account.accountDetail,
+  };
+};
+
+const mapDispatchToProps = {
+  checkCoreAccount,
+  checkAmountStaked,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

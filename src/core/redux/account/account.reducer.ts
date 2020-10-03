@@ -3,7 +3,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { KeyPair } from 'ft3-lib';
 import { AccountDetail, AccountState } from './account.state';
-import { setAccountDetail } from './account.actions';
+import { setAccountDetail, setAmountStaked, setCoreAccount } from './account.actions';
 
 function makeOrLoadKeyPair(): KeyPair {
   if ('hp_privkey' in localStorage) {
@@ -33,13 +33,22 @@ function storeAccountDetail(ad: AccountDetail) {
 
 const initialAccountState: AccountState = {
   isChecked: true,
+  isCoreAccount: false,
+  amountStaked: 0,
   keyPair: makeOrLoadKeyPair(),
   accountDetail: getStoredAccountDetail(),
 };
 
 export const accountReducer = createReducer(initialAccountState, (builder) => {
-  builder.addCase(setAccountDetail, (state, action) => {
-    storeAccountDetail(action.payload);
-    state.accountDetail = action.payload;
-  });
+  builder
+    .addCase(setAccountDetail, (state, action) => {
+      storeAccountDetail(action.payload);
+      state.accountDetail = action.payload;
+    })
+    .addCase(setCoreAccount, (state, action) => {
+      state.isCoreAccount = action.payload;
+    })
+    .addCase(setAmountStaked, (state, action) => {
+      state.amountStaked = action.payload;
+    });
 });

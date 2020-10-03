@@ -19,16 +19,17 @@ struct poll_option_votes {
 	votes: integer;
 }
 
-operation vote_for_option_in_poll(account_id: byte_array, auth_descriptor_id: byte_array, id: name, option: text) {
+operation vote_for_option_in_poll (account_id: byte_array, auth_descriptor_id: byte_array, id: name, option: text) {
 	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
-	val the_poll = poll@{ .proposal.id == id };
+	val the_poll = poll @{ .proposal.id == id };
+	require(the_poll.proposal.endTimestamp > op_context.last_block_time, "Proposal already completed");
 	
-	create poll_vote(the_poll, user, poll_option@{ .text == option }, account.eth_account_state @ {user} .staked_amount);
+	create poll_vote (the_poll, user, poll_option @{ the_poll, .text == option }, account.eth_account_state @ { user } .staked_amount);
 }
 
-query get_poll_proposal_options(id: name) {
-	var the_poll = poll@{ .proposal.id == id };
-	var votes = poll_vote@*{ .poll == the_poll };
+query get_poll_proposal_options (id: name) {
+	var the_poll = poll @{ .proposal.id == id };
+	var votes = poll_vote @* { .poll == the_poll };
 	
 	var vote_map = map<name, integer>();
 	for (po in poll_option @* { the_poll }) vote_map.put(po.text, 0);
@@ -46,6 +47,6 @@ query get_poll_proposal_options(id: name) {
 	return results;
 }
 
-query get_poll_vote(id: name, account_id: byte_array) {
-	return poll_vote@?{ .poll.proposal.id == id, account.eth_account@{ .account.id == account_id } } ( .poll_option.text );
+query get_poll_vote (id: name, account_id: byte_array) {
+	return poll_vote @? { .poll.proposal.id == id, account.eth_account @ { .account.id == account_id } } ( .poll_option.text );
 }

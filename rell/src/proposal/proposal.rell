@@ -11,7 +11,7 @@ entity proposal {
 	description: text;
 }
 
-operation create_proposal(account_id: byte_array, auth_descriptor_id: byte_array, 
+operation create_proposal (account_id: byte_array, auth_descriptor_id: byte_array, 
 	appName: name, title: text, description: text
 ) {
 	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
@@ -20,11 +20,11 @@ operation create_proposal(account_id: byte_array, auth_descriptor_id: byte_array
 	val id = 'HGET-' + numeric_id;
 	
 	var category = 'Community';
-	if (account.is_core_user(user)) {
+	if (account._is_core_user(user)) {
 		category = 'Core';
 	}
 	
-	val proposal = create proposal(
+	val proposal = create proposal (
 		id,
 		title, 
 		category,
@@ -34,12 +34,24 @@ operation create_proposal(account_id: byte_array, auth_descriptor_id: byte_array
 		description
 	);
 	val poll = create poll (proposal);
-	create poll_option ( poll, "yes" );
-	create poll_option ( poll, "no" );
+	create poll_option ( poll, "Approve" );
+	create poll_option ( poll, "Reject" );
 }
 
-query get_all_proposals() {
-	return proposal@*{} (
+operation delete_proposal (account_id: byte_array, auth_descriptor_id: byte_array, id: name) {
+	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
+	account.require_core_user(user);
+	
+	val proposal = proposal @ { .id == id };	
+	val poll = poll @ { proposal };
+
+	delete poll_option @* { poll };
+	delete poll;
+	delete proposal;
+}
+
+query get_all_proposals () {
+	return proposal @* {} (
 		.id,
 		.title,
 		.category,
@@ -49,8 +61,8 @@ query get_all_proposals() {
 	);
 }
 
-query get_proposals_by_category(category: name) {
-	return proposal@*{ .category == category } (
+query get_proposals_by_category (category: name) {
+	return proposal @* { .category == category } (
 		.id,
 		.title,
 		.category,
@@ -60,8 +72,8 @@ query get_proposals_by_category(category: name) {
 	);
 }
 
-query get_proposals_ending_after_timestamp(timestamp: integer) {
-	return proposal@*{ .endTimestamp > timestamp } (
+query get_proposals_ending_after_timestamp (timestamp: integer) {
+	return proposal @* { .endTimestamp > timestamp } (
 		.id,
 		.title,
 		.category,
@@ -71,8 +83,8 @@ query get_proposals_ending_after_timestamp(timestamp: integer) {
 	);
 }
 
-query get_proposals_ended_before_timestamp(timestamp: integer) {
-	return proposal@*{ .endTimestamp < timestamp } (
+query get_proposals_ended_before_timestamp (timestamp: integer) {
+	return proposal @* { .endTimestamp < timestamp } (
 		.id,
 		.title,
 		.category,
@@ -82,8 +94,8 @@ query get_proposals_ended_before_timestamp(timestamp: integer) {
 	);
 }
 
-query get_proposals_by_category_ending_after_timestamp(category: name, timestamp: integer) {
-	return proposal@*{ .category == category, .endTimestamp > timestamp } (
+query get_proposals_by_category_ending_after_timestamp (category: name, timestamp: integer) {
+	return proposal @* { .category == category, .endTimestamp > timestamp } (
 		.id,
 		.title,
 		.category,
@@ -93,8 +105,8 @@ query get_proposals_by_category_ending_after_timestamp(category: name, timestamp
 	);
 }
 
-query get_proposals_by_category_ended_before_timestamp(category: name, timestamp: integer) {
-	return proposal@*{ .category == category, .endTimestamp < timestamp } (
+query get_proposals_by_category_ended_before_timestamp (category: name, timestamp: integer) {
+	return proposal @* { .category == category, .endTimestamp < timestamp } (
 		.id,
 		.title,
 		.category,
@@ -104,8 +116,8 @@ query get_proposals_by_category_ended_before_timestamp(category: name, timestamp
 	);
 }
 
-query get_full_proposal(id: name) {
-	return proposal@{ .id == id } (
+query get_full_proposal (id: name) {
+	return proposal @ { .id == id } (
 		.id,
 		.title,
 		.category,
@@ -116,6 +128,6 @@ query get_full_proposal(id: name) {
 	);
 }
 
-function days_in_millis(days: integer): integer {
+function days_in_millis (days: integer): integer {
 	return 1000 * 60 * 60 * 24 * days;
 }

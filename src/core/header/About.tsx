@@ -2,6 +2,7 @@ import { Dialog, DialogTitle, DialogContent, Grid, IconButton, makeStyles } from
 import React from 'react';
 import GitInfo from 'react-git-info/macro';
 import GitHubIcon from '@material-ui/icons/GitHub';
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
   },
   detailInfo: {
     textAlign: 'right',
+  },
+  buttonBar: {
+    marginBottom: '10px',
+  },
+  divider: {
+    marginBottom: '20px',
   },
 }));
 
@@ -55,11 +62,14 @@ const About: React.FunctionComponent<{ open: boolean; onClose: () => void }> = (
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Information</DialogTitle>
+      <DialogTitle>About</DialogTitle>
       <DialogContent>
-        <IconButton href="https://github.com/snieking/hedget-proposals">
-          <GitHubIcon />
-        </IconButton>
+        <div className={classes.buttonBar}>
+          <IconButton href="https://github.com/snieking/hedget-proposals">
+            <GitHubIcon />
+          </IconButton>
+        </div>
+        <Divider className={classes.divider} />
         <Grid container>
           {detail('Block height', '0')}
           {detail('Updated', formatDate(new Date(gitInfo.commit.date)))}

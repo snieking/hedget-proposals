@@ -68,11 +68,7 @@ const AppProposals: React.FunctionComponent = () => {
   }
 
   function openAddProposalDialog() {
-    console.log("AccountState", accountState);
-    console.log("Valid: ", accountState.accountDetail.validUntil > (Date.now() / 1000));
-    console.log("ValidUntil: ", accountState.accountDetail.validUntil);
-    console.log("Current time: ", Date.now());
-    if (accountState.accountDetail && accountState.accountDetail.validUntil > (Date.now() / 1000)) {
+    if (accountState.accountDetail && accountState.accountDetail.validUntil > Date.now() / 1000) {
       setAddDialogOpen(true);
     } else {
       setLoginOpen(true);

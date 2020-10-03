@@ -34,14 +34,6 @@ struct module_args {
 	admin_pubkey: pubkey;
 }
 
-function require_auth_server () {
-	require(is_signer(chain_context.args.auth_server_pubkey));
-}
-
-function require_admin () {
-	require(is_signer(chain_context.args.admin_pubkey));
-}
-
 function _add_auth_descriptor (account, auth_descriptor) {
      val descriptor_id = auth_descriptor.hash();
      
@@ -62,7 +54,7 @@ function _add_auth_descriptor (account, auth_descriptor) {
      setup_auth_descriptor_variables(account_auth_descriptor);
 }
 
-function _create_account(id: byte_array, auth_descriptor): account {
+function _create_account (id: byte_array, auth_descriptor): account {
 	val account = create account(id);
 	
 	_add_auth_descriptor(account, auth_descriptor);
@@ -102,6 +94,16 @@ operation login_eth_user (eth_address: text, auth_descriptor, valid_until: times
 	);
 }
 
+operation promote_to_core_user (id: byte_array) {
+	require_admin();
+	create core_user(eth_account @{ .account.id == id });
+}
+
+operation demote_core_user (id: byte_array) {
+	require_admin();
+	delete core_user @{ .eth_account.account.id == id };
+}
+
 query get_eth_account_state (eth_address: text, pubkey) {
 	val acc = eth_account @? { eth_address };
 	if (acc??) {
@@ -112,7 +114,16 @@ query get_eth_account_state (eth_address: text, pubkey) {
 			{ ad.account == ft3_acc, ap.account_auth_descriptor == ad, ap.id == pubkey }))
 				return null;
 		
-		return eth_account_state @? { acc } (.valid_until, .staked_amount);
+		return eth_account_state @? { acc } ( .valid_until, .staked_amount );
 	}
 	return null;
+}
+
+query is_core_user (id: byte_array): boolean {
+	val acc = eth_account @{ .account.id == id };
+	return _is_core_user(acc);
+}
+
+query amount_staked (id: byte_array): integer {
+	return eth_account_state @{ eth_account @{ .account.id == id }} ( .staked_amount );
 }
