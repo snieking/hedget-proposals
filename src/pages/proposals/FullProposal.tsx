@@ -6,23 +6,18 @@ import TimerIcon from '@material-ui/icons/Timer';
 import EventIcon from '@material-ui/icons/Event';
 import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
-import { connect } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
+import { KeyPair } from 'ft3-lib';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
 import { getFullProposal, getProposalPollOptions, voteForOptionInPoll } from '../../core/services/proposals.service';
 import StatusChip from '../../shared/StatusChip';
 import PollOptionStats from './poll/PollOptionStats';
 import PollVoteOption from './poll/PollVoteOption';
 import ApplicationState from '../../core/redux/application-state';
-import { KeyPair } from '../../shared/types';
 
 interface MatchParams {
   id: string;
 }
-
-interface Props extends RouteComponentProps<MatchParams> {
-  keyPair: KeyPair;
-}
-
 const useStyles = makeStyles({
   leftContainer: {
     marginRight: '10px',
@@ -39,12 +34,14 @@ const useStyles = makeStyles({
   },
 });
 
-const FullProposal: React.FunctionComponent<Props> = (props) => {
+const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = (props) => {
   const classes = useStyles();
   const [proposal, setProposal] = useState<Proposal>();
   const [pollOptions, setPollOptions] = useState<PollOption[]>();
   const [optionVote, setOptionVote] = useState<string>();
+  const accountState = useSelector((state: ApplicationState) => state.account);
 
+  console.log("FULL PROPOSAL", props);
   useEffect(() => {
     if (props.match.params.id) {
       getFullProposal(props.match.params.id).then((p) => setProposal(p));
@@ -53,34 +50,35 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
   }, [props]);
 
   function renderPollStats(total: number) {
+    console.log(pollOptions);
     return pollOptions.map((option) => (
       <PollOptionStats
-        key={option.option}
-        text={option.option}
+        key={option.text}
+        text={option.text}
         votes={option.votes}
         total={total}
-        selected={option.option === optionVote}
+        selected={option.text === optionVote}
       />
     ));
   }
 
   function voteForOption(voteAnswer: string): void {
-    const answer = pollOptions.find((a) => a.option === voteAnswer);
+    const answer = pollOptions.find((a) => a.text === voteAnswer);
 
     if (answer) {
       answer.votes++;
-      setOptionVote(answer.option);
-      voteForOptionInPoll(props.keyPair, proposal.id, answer.option);
+      setOptionVote(answer.text);
+      voteForOptionInPoll(accountState, proposal.id, answer.text);
     }
   }
 
   function renderPollOptions() {
-    return pollOptions.map((option) => <PollVoteOption text={option.option} voteHandler={voteForOption} />);
+    return pollOptions.map((option) => <PollVoteOption text={option.text} voteHandler={voteForOption} />);
   }
 
   if (!proposal || !pollOptions) return null;
 
-  const total = pollOptions.map((opt) => opt.votes).reduce((a, b) => a + b);
+  const total = pollOptions.map((opt) => opt.votes).reduce((a, b) => a + b, 0);
 
   return (
     <div>
@@ -123,17 +121,11 @@ const FullProposal: React.FunctionComponent<Props> = (props) => {
           </div>
         </Grid>
         <Grid item sm={12} md={6}>
-          {props.keyPair != null ? renderPollOptions() : renderPollStats(total)}
+          {accountState.isChecked && accountState.accountDetail ? renderPollOptions() : renderPollStats(total)}
         </Grid>
       </Grid>
     </div>
   );
 };
 
-const mapStateToProps = (store: ApplicationState) => {
-  return {
-    keyPair: store.account.keyPair,
-  };
-};
-
-export default connect(mapStateToProps)(FullProposal);
+export default FullProposal;

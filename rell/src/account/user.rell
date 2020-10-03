@@ -1,11 +1,118 @@
-entity user {
-	key pubkey;
+import lib.ft3.account.{  account,
+	account_auth_descriptor,
+	auth_descriptor_participant,
+	setup_auth_descriptor_variables,
+	analyze_auth_descriptor_rules,
+	rule_variable,
+	rule_operator,
+	rule_expression,
+	rl_state,	
+	auth_descriptor
+};
+
+import lib.ft3.core.{
+	my_blockchain_info
+};
+
+entity eth_account {
+	key address: text;
+	key account;
 }
 
-entity admin {
-	key user;
+entity eth_account_state {
+	key eth_account;
+	index valid_until: timestamp;
+	staked_amount: integer;
 }
 
 entity core_user {
-	key user;
+	key eth_account;
+}
+
+struct module_args {
+	auth_server_pubkey: pubkey;
+	admin_pubkey: pubkey;
+}
+
+function require_auth_server () {
+	require(is_signer(chain_context.args.auth_server_pubkey));
+}
+
+function require_admin () {
+	require(is_signer(chain_context.args.admin_pubkey));
+}
+
+function _add_auth_descriptor (account, auth_descriptor) {
+     val descriptor_id = auth_descriptor.hash();
+     
+     analyze_auth_descriptor_rules(auth_descriptor.rules, 0);
+     
+     val account_auth_descriptor = create account_auth_descriptor (
+        account,
+        descriptor_id,
+        auth_descriptor.auth_type,
+        args = auth_descriptor.args.to_gtv().to_bytes(),
+        rules = auth_descriptor.rules.to_gtv().to_bytes()
+     );
+     
+     for (participant in auth_descriptor.participants) {
+        create auth_descriptor_participant(account_auth_descriptor, id = participant);
+     }
+     
+     setup_auth_descriptor_variables(account_auth_descriptor);
+}
+
+function _create_account(id: byte_array, auth_descriptor): account {
+	val account = create account(id);
+	
+	_add_auth_descriptor(account, auth_descriptor);
+	
+	val max_points = my_blockchain_info.rate_limit_max_points;
+	val recovery_time = my_blockchain_info.rate_limit_recovery_time;
+	val points_at_start = my_blockchain_info.rate_limit_points_at_account_creation;
+ 
+	create rl_state(
+		account, 
+		.points = points_at_start, 
+		.last_update = op_context.last_block_time, 
+		max_points, 
+		recovery_time
+	);
+
+	return account;
+}
+
+
+operation login_eth_user (eth_address: text, auth_descriptor, valid_until: timestamp, staked_amount: integer) {
+	require_auth_server();
+	require(eth_address == eth_address.lower_case());
+	var eth_account = eth_account @? { eth_address };
+	if (empty(eth_account)) {
+		val account = _create_account ( eth_address.to_bytes().sha256()
+			, auth_descriptor );
+		eth_account = create eth_account (eth_address, account);
+	} else {
+		_add_auth_descriptor(eth_account.account, auth_descriptor);		
+	}
+	delete eth_account_state @? { eth_account };
+	create eth_account_state (
+		eth_account,
+		valid_until,
+		staked_amount
+	);
+}
+
+query get_eth_account_state (eth_address: text, pubkey) {
+	val acc = eth_account @? { eth_address };
+	if (acc??) {
+		val ft3_acc = account @? { eth_address.to_bytes().sha256() };
+		if (empty(ft3_acc)) return null;
+		if (empty(
+			(ad: account_auth_descriptor, ap: auth_descriptor_participant) @?
+			{ ad.account == ft3_acc, ap.account_auth_descriptor == ad, ap.id == pubkey }))
+				return null;
+		
+		return eth_account_state @? { acc } (.valid_until, .staked_amount);
+	}
+	return null;
 }

@@ -36,6 +36,8 @@ const PollOptionStats: React.FunctionComponent<Props> = (props) => {
 
   const [width, setWidth] = useState(window.innerWidth);
 
+  const total = props.total > 0 ? props.total : 1;
+
   useEffect(() => {
     function handleResize() {
       setWidth(window.innerWidth);
@@ -45,7 +47,7 @@ const PollOptionStats: React.FunctionComponent<Props> = (props) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const percentageOfVotes = (props.votes / props.total) * 100;
+  const percentageOfVotes = (props.votes / total) * 100;
 
   return (
     <>
@@ -61,7 +63,7 @@ const PollOptionStats: React.FunctionComponent<Props> = (props) => {
         <div className={classes.textWrapper}>
           <Typography id={props.text} className={classes.text} style={{ minWidth: width * 0.7 }} gutterBottom>
             <span className={classes.percentage}>{Math.round(percentageOfVotes)}%</span>
-            {props.text}
+            <span>{props.text}</span>
           </Typography>
         </div>
       </div>
