@@ -50,6 +50,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-dev": "cp ./src/config.js ./src/config.bak.js && cp ./src/config-dev.js ./src/config.js && cp ./public/robots.txt ./public/robots.txt.bak && cp ./public/robots.txt.dev ./public/robots.txt && react-scripts build && mv ./src/config.bak.js ./src/config.js && mv ./public/robots.txt.bak ./public/robots.txt",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write '{**/*,*}.{js,ts,tsx}'",

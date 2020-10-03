@@ -1,8 +1,9 @@
 import { Dialog, DialogTitle, DialogContent, Grid, IconButton, makeStyles } from '@material-ui/core';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import GitInfo from 'react-git-info/macro';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import Divider from "@material-ui/core/Divider";
+import {getBlockHeight} from "../services/postchain.service";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,6 +36,11 @@ const gitInfo = GitInfo();
 
 const About: React.FunctionComponent<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
   const classes = useStyles();
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    getBlockHeight().then((h) => setHeight(h));
+  }, []);
 
   function formatDate(date: Date) {
     let month = `${date.getMonth() + 1}`;
@@ -62,7 +68,6 @@ const About: React.FunctionComponent<{ open: boolean; onClose: () => void }> = (
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>About</DialogTitle>
       <DialogContent>
         <div className={classes.buttonBar}>
           <IconButton href="https://github.com/snieking/hedget-proposals">
@@ -71,10 +76,11 @@ const About: React.FunctionComponent<{ open: boolean; onClose: () => void }> = (
         </div>
         <Divider className={classes.divider} />
         <Grid container>
-          {detail('Block height', '0')}
+          {detail('Block height', `${height}`)}
           {detail('Updated', formatDate(new Date(gitInfo.commit.date)))}
           {detail('Commit', gitInfo.commit.shortHash)}
         </Grid>
+        <br />
       </DialogContent>
     </Dialog>
   );

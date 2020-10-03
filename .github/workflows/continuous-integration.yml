@@ -53,7 +53,7 @@ jobs:
       #     file: coverage/coverage-final.json
 
       - name: Build dev environment if [develop] branch
-        run: npm run build
+        run: npm run build-dev
         if: github.ref == 'refs/heads/develop'
 
       - uses: chrislennon/action-aws-cli@v1.1
