@@ -22,6 +22,9 @@ import PollOptionStats from './poll/PollOptionStats';
 import PollVoteOption from './poll/PollVoteOption';
 import ApplicationState from '../../core/redux/application-state';
 import { COLOR_RED } from '../../core/dynamic-theme/DefaultTheme';
+import { formatedAuthor } from './util';
+import useTheme from "@material-ui/core/styles/useTheme";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 interface MatchParams {
   id: string;
@@ -54,10 +57,17 @@ const useStyles = makeStyles({
   deleteBtn: {
     backgroundColor: COLOR_RED,
   },
+  link: {
+    textDecoration: 'none',
+  },
 });
 
 const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = (props) => {
   const classes = useStyles();
+
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [proposal, setProposal] = useState<Proposal>();
   const [pollOptions, setPollOptions] = useState<PollOption[]>();
   const [optionVote, setOptionVote] = useState<string>();
@@ -139,9 +149,16 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
             <StatusChip status={proposal.status} />
             <div className={classes.authorWrapper}>
               <PersonIcon />
-              <Typography variant="body2" component="span" className={classes.iconText}>
-                {proposal.author}
-              </Typography>
+              <a
+                href={`https://etherscan.io/address/${proposal.author}`}
+                className={classes.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Typography variant="body2" component="span" className={classes.iconText}>
+                  {matches ? formatedAuthor(proposal.author) : proposal.author}
+                </Typography>
+              </a>
             </div>
             <div>
               <CategoryIcon />
