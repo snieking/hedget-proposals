@@ -19,7 +19,7 @@ import useMetaMask from './lib/hooks/use-meta-mask';
 import ApplicationState from './core/redux/application-state';
 import { setAccountDetail } from './core/redux/account/account.actions';
 import * as config from './config';
-import logger from "./shared/logger";
+import logger from './shared/logger';
 
 const useStyles = makeStyles({
   description: {
@@ -32,9 +32,12 @@ const useStyles = makeStyles({
     top: '8px',
     marginLeft: '5px',
   },
-  errorMessage: {
+  message: {
     marginTop: '10px',
     fontWeight: 'bold',
+  },
+  metaMaskInfo: {
+    textAlign: 'center',
   },
 });
 
@@ -63,8 +66,6 @@ const StakeMain: React.FunctionComponent = () => {
       setInitialized(true);
     }
   }, [initialized, loginAPI]);
-
-  logger.info(`Stake state: ${loginAPI?.stakeState}`);
 
   async function login(stakeUntilDate: number) {
     const wasLoading = loading;
@@ -195,7 +196,7 @@ const StakeMain: React.FunctionComponent = () => {
               {loading ? <CircularProgress size={24} /> : <span>Stake</span>}
             </Button>
             {stakeError && (
-              <Typography variant="body2" color="error" className={classes.errorMessage}>
+              <Typography variant="body2" color="error" className={classes.message}>
                 {stakeError}
               </Typography>
             )}
@@ -208,14 +209,22 @@ const StakeMain: React.FunctionComponent = () => {
   return (
     <DialogContent dividers>
       {!provider && (
-        <Typography color="error" variant="h3">
-          MetaMask not detected
-        </Typography>
+        <div>
+          <Typography color="error" variant="h5" component="h5">
+            MetaMask not detected
+          </Typography>
+          <Typography variant="body2" component="p" className={classes.message}>
+            In order to submit & vote on proposals, <a href="https://metamask.io/">MetaMask</a> is required.
+          </Typography>
+        </div>
       )}
       {provider && !haveAccounts && (
-        <Typography color="error" variant="h3">
-          Please connect MetaMask
-        </Typography>
+        <div className={classes.metaMaskInfo}>
+          <CircularProgress size={48} />
+          <Typography variant="body2" className={classes.message}>
+            Please connect MetaMask
+          </Typography>
+        </div>
       )}
       {initialized && provider && haveAccounts && selectedAddress && !loginAPI && (
         <Typography color="error" variant="h3">
