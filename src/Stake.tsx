@@ -141,15 +141,19 @@ const StakeMain: React.FunctionComponent = () => {
           </Typography>
         )}
         {loginAPI?.stakeState && (
-          <Grid item container>
-            <Typography variant="body2">
-              <span className={classes.stakedTokens}>Tokens: </span>
-              {loginAPI.stakeState.amount} HGET
-            </Typography>
-            <Typography variant="body2">
-              <span className={classes.stakedTokens}>Until: </span>
-              {new Date(loginAPI.stakeState.until * 1000).toLocaleDateString(window.navigator.language)}
-            </Typography>
+          <Grid item xs={12}>
+            <div>
+              <Typography variant="body2" component="p">
+                <span className={classes.stakedTokens}>Tokens: </span>
+                {loginAPI.stakeState.amount} HGET
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="body2">
+                <span className={classes.stakedTokens}>Until: </span>
+                {new Date(loginAPI.stakeState.until * 1000).toLocaleDateString(window.navigator.language)}
+              </Typography>
+            </div>
           </Grid>
         )}
         {needRefresh && (
