@@ -1,9 +1,9 @@
-import { Dialog, DialogTitle, DialogContent, Grid, IconButton, makeStyles } from '@material-ui/core';
-import React, {useEffect, useState} from 'react';
+import { Dialog, DialogContent, Grid, IconButton, makeStyles } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import GitInfo from 'react-git-info/macro';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import Divider from "@material-ui/core/Divider";
-import {getBlockHeight} from "../services/postchain.service";
+import Divider from '@material-ui/core/Divider';
+import { getBlockHeight } from '../services/postchain.service';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
