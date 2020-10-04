@@ -9,6 +9,8 @@ import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
+import useTheme from '@material-ui/core/styles/useTheme';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
 import {
   deleteProposal,
@@ -23,8 +25,6 @@ import PollVoteOption from './poll/PollVoteOption';
 import ApplicationState from '../../core/redux/application-state';
 import { COLOR_RED } from '../../core/dynamic-theme/DefaultTheme';
 import { formatedAuthor } from './util';
-import useTheme from "@material-ui/core/styles/useTheme";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 interface MatchParams {
   id: string;
