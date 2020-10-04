@@ -14,12 +14,12 @@ import {
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { util } from 'postchain-client';
+import log from 'loglevel';
 import { POST } from './lib/util';
 import useMetaMask from './lib/hooks/use-meta-mask';
 import ApplicationState from './core/redux/application-state';
 import { setAccountDetail } from './core/redux/account/account.actions';
 import * as config from './config';
-import logger from './shared/logger';
 
 const useStyles = makeStyles({
   description: {
@@ -83,7 +83,7 @@ const StakeMain: React.FunctionComponent = () => {
         pubkey,
       });
 
-      logger.info(`Login response: ${response}`);
+      log.debug(`Login response: ${response}`);
       if (response.status === 'SUCCESS') {
         const accountID = util.sha256(selectedAddress.toLowerCase()).toString('hex');
         // yes, accountID is sha256 of selected address text

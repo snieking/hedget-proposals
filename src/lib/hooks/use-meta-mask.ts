@@ -3,10 +3,10 @@ import React from 'react';
 import detectProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 
+import log from 'loglevel';
 import MessageSigner from '../message-signer';
 import Staker from '../staker';
 import HGET from '../hget';
-import logger from "../../shared/logger";
 
 interface LoginAPI {
   contracts: { staker: Staker; hget: HGET };
@@ -50,7 +50,7 @@ export default function useMetaMask(): MetamaskInfo {
             stakeState: await staker.getStakeState(_selectedAddress),
           });
         } catch (error) {
-          logger.error(error);
+          log.error(error);
         }
 
         _provider.on('accountsChanged', () => {

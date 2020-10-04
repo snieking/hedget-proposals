@@ -21,5 +21,4 @@ module.exports = {
   },
   features: {},
   test: true,
-  logLevel: 'debug',
 };

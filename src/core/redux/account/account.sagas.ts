@@ -1,4 +1,5 @@
 import { select, takeLatest, put } from 'redux-saga/effects';
+import log from 'loglevel';
 import { AccountActionTypes } from './account.state';
 import ApplicationState from '../application-state';
 import { amountStaked, isCoreAccount } from '../../services/account.service';
@@ -20,6 +21,7 @@ function* checkAmountStakedSaga() {
 
   if (accountState && accountState.accountDetail) {
     const amount = yield amountStaked(accountState.accountDetail);
+    log.debug(`User staked ${amount} HGET`);
     yield put(setAmountStaked(amount));
   }
 }

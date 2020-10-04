@@ -14,6 +14,7 @@ import Content from './Content';
 import ApplicationState from './core/redux/application-state';
 import { AccountDetail } from './core/redux/account/account.state';
 import { checkAmountStaked, checkCoreAccount } from './core/redux/account/account.actions';
+import { initLogger } from './util/log-util';
 
 interface Props {
   store: Store<ApplicationState>;
@@ -31,6 +32,8 @@ interface Props {
 //       phpFilename: config.matomo.phpFilename,
 //     })
 //   : null;
+
+initLogger();
 
 const App: React.FunctionComponent<Props> = (props) => {
   useEffect(() => {
