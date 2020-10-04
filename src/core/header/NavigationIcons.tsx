@@ -5,14 +5,19 @@ import { AccountCircle } from '@material-ui/icons';
 import About from './About';
 import Stake from '../../Stake';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   wrapper: {
     marginTop: '10px',
   },
   icon: {
-    fontSize: 32,
+    width: '24px',
+    height: '24px',
+    [theme.breakpoints.up('md')]: {
+      width: '32px',
+      height: '32px',
+    },
   },
-});
+}));
 
 const NavigationIcons: React.FunctionComponent = () => {
   const classes = useStyles();

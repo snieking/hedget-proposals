@@ -56,10 +56,10 @@ const About: React.FunctionComponent<{ open: boolean; onClose: () => void }> = (
   function detail(title: string, stat: string) {
     return (
       <>
-        <Grid item md={6} className={classes.detailTitle}>
+        <Grid item xs={6} className={classes.detailTitle}>
           {title}
         </Grid>
-        <Grid item md={6} className={classes.detailInfo}>
+        <Grid item xs={6} className={classes.detailInfo}>
           {stat}
         </Grid>
       </>

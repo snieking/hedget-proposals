@@ -114,12 +114,12 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
         <b>{proposal.id}:</b> {proposal.title}
       </Typography>
       <Grid container spacing={2}>
-        <Grid item sm={12} md={6}>
+        <Grid item xs={12} md={6}>
           <div className={classes.leftContainer}>
             <p>{proposal.description}</p>
           </div>
         </Grid>
-        <Grid item sm={12} md={6}>
+        <Grid item xs={12} md={6}>
           <div>
             {accountState.isCoreAccount && (
               <div className={classes.coreActions}>
@@ -164,7 +164,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
           </div>
         </Grid>
         {total !== 0 && (
-          <Grid item sm={12} md={6}>
+          <Grid item xs={12} md={6}>
             {renderPollStats(total)}
           </Grid>
         )}
@@ -173,7 +173,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
           proposal &&
           !optionVote &&
           proposal.status === 'In Progress' && (
-            <Grid item sm={12}>
+            <Grid item xs={12}>
               {renderPollOptions()}
             </Grid>
           )}

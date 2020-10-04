@@ -8,8 +8,6 @@ import {
   Button,
   Typography,
   CircularProgress,
-  Box,
-  Paper,
   makeStyles,
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,11 +24,15 @@ const useStyles = makeStyles({
     margin: '10px',
   },
   textInput: {
+    marginTop: '10px',
     marginRight: '5px',
   },
   button: {
-    top: '8px',
+    marginTop: '18px',
     marginLeft: '5px',
+  },
+  stakedTokens: {
+    fontWeight: 'bold',
   },
   message: {
     marginTop: '10px',
@@ -140,12 +142,14 @@ const StakeMain: React.FunctionComponent = () => {
         )}
         {loginAPI?.stakeState && (
           <Grid item container>
-            <Paper>
-              <Box fontWeight="fontWeightBold">Tokens: {loginAPI.stakeState.amount} HGET</Box>
-              <Box fontWeight="fontWeightBold">
-                Until: {new Date(loginAPI.stakeState.until * 1000).toLocaleDateString(window.navigator.language)}
-              </Box>
-            </Paper>
+            <Typography variant="body2">
+              <span className={classes.stakedTokens}>Tokens: </span>
+              {loginAPI.stakeState.amount} HGET
+            </Typography>
+            <Typography variant="body2">
+              <span className={classes.stakedTokens}>Until: </span>
+              {new Date(loginAPI.stakeState.until * 1000).toLocaleDateString(window.navigator.language)}
+            </Typography>
           </Grid>
         )}
         {needRefresh && (
