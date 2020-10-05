@@ -33,6 +33,9 @@ const useStyles = makeStyles({
   leftContainer: {
     marginRight: '10px',
   },
+  rightContainer: {
+    marginTop: '10px',
+  },
   authorWrapper: {
     marginTop: '10px',
   },
@@ -133,7 +136,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
           </div>
         </Grid>
         <Grid item xs={12} md={6}>
-          <div>
+          <div className={classes.rightContainer}>
             {accountState.isCoreAccount && (
               <div className={classes.coreActions}>
                 <Button
