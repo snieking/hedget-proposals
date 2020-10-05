@@ -57,6 +57,9 @@ const useStyles = makeStyles({
   deleteBtn: {
     backgroundColor: COLOR_RED,
   },
+  description: {
+    whiteSpace: 'pre-wrap',
+  },
   link: {
     textDecoration: 'none',
   },
@@ -126,7 +129,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <div className={classes.leftContainer}>
-            <p>{proposal.description}</p>
+            <p className={classes.description}>{proposal.description}</p>
           </div>
         </Grid>
         <Grid item xs={12} md={6}>
