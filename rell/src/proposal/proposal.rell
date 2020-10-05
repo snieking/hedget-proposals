@@ -9,12 +9,15 @@ entity proposal {
 	startTimestamp: integer;
 	endTimestamp: integer;
 	description: text;
+	index category, endTimestamp;
+	index author, endTimestamp;
 }
 
 operation create_proposal (account_id: byte_array, auth_descriptor_id: byte_array, 
-	appName: name, title: text, description: text
+	appName: name, title: text, description: text, options: list<text>
 ) {
 	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
+	
 	
 	val numeric_id = app.get_and_increment_id(appName);
 	val id = 'HGET-' + numeric_id;
@@ -34,8 +37,10 @@ operation create_proposal (account_id: byte_array, auth_descriptor_id: byte_arra
 		description
 	);
 	val poll = create poll (proposal);
-	create poll_option ( poll, "Approve" );
-	create poll_option ( poll, "Reject" );
+
+	for (option in options) {
+		create poll_option ( poll, option );
+	}
 }
 
 operation delete_proposal (account_id: byte_array, auth_descriptor_id: byte_array, id: name) {
@@ -52,6 +57,17 @@ operation delete_proposal (account_id: byte_array, auth_descriptor_id: byte_arra
 
 query get_all_proposals () {
 	return proposal @* {} (
+		.id,
+		.title,
+		.category,
+		author = .author.address,
+		.startTimestamp,
+		@sort_desc .endTimestamp
+	);
+}
+
+query get_proposals_by_eth_addr_after_timestamp (eth_addr: text, timestamp: integer) {
+	return proposal @* { .author.address == eth_addr, .endTimestamp > timestamp } (
 		.id,
 		.title,
 		.category,

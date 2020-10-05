@@ -1,7 +1,7 @@
 module.exports = {
   blockchain: {
     nodeApiUrl: 'http://35.205.218.13:7740',
-    rid: '650FE2A3DF585E889CD80B0526B1A168DF654DD42ACD41E84D77997A1F1ACD1E',
+    rid: '1A2A9CA6134CA81992985943EB72F92DD3AE2AD65CB0FC41D41B13ACF3C5BCC8',
     explorerBaseUrl: 'https://explorer-testnet.chromia.com/',
   },
   eth: {
