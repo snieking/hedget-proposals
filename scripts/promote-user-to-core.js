@@ -1,7 +1,7 @@
 const admin_priv_key = '';
-const account_id = '';
-const nodeApiUrl = 'http://localhost:7740';
-const blockchainRID = '650FE2A3DF585E889CD80B0526B1A168DF654DD42ACD41E84D77997A1F1ACD1E';
+const eth_addr = '';
+const nodeApiUrl = '';
+const blockchainRID = '57862189D255A82ED1DCCD925BD9F02DE8CFD32CF94D43022D68ED839FB91E01';
 
 const pcl = require('postchain-client');
 
@@ -13,7 +13,7 @@ const gtx = pcl.gtxClient.createClient(rest, Buffer.from(blockchainRID, 'hex'), 
   const pubKey = new pcl.util.createPublicKey(privKey);
 
   const tx = gtx.newTransaction([pubKey]);
-  tx.addOperation('promote_to_core_user', account_id);
+  tx.addOperation('promote_to_core_user', eth_addr);
   tx.addOperation('nop');
 
   tx.sign(privKey, pubKey);

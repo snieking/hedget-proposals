@@ -94,14 +94,14 @@ operation login_eth_user (eth_address: text, auth_descriptor, valid_until: times
 	);
 }
 
-operation promote_to_core_user (id: byte_array) {
+operation promote_to_core_user (eth_addr: text) {
 	require_admin();
-	create core_user(eth_account @{ .account.id == id });
+	create core_user(eth_account @{ .address == eth_addr });
 }
 
-operation demote_core_user (id: byte_array) {
+operation demote_core_user (eth_addr: text) {
 	require_admin();
-	delete core_user @{ .eth_account.account.id == id };
+	delete core_user @{ .eth_account.address == eth_addr };
 }
 
 query get_eth_account_state (eth_address: text, pubkey) {

@@ -1,7 +1,7 @@
 const admin_priv_key = '';
-const account_id = '';
+const eth_addr = '';
 const nodeApiUrl = 'http://localhost:7740';
-const blockchainRID = '650FE2A3DF585E889CD80B0526B1A168DF654DD42ACD41E84D77997A1F1ACD1E';
+const blockchainRID = '57862189D255A82ED1DCCD925BD9F02DE8CFD32CF94D43022D68ED839FB91E01';
 
 // This script can be used to call the update_block operation which is used to update rate limiting.
 const pcl = require('postchain-client');
@@ -14,7 +14,7 @@ const gtx = pcl.gtxClient.createClient(rest, Buffer.from(blockchainRID, 'hex'), 
   const pubKey = new pcl.util.createPublicKey(privKey);
 
   const tx = gtx.newTransaction([pubKey]);
-  tx.addOperation('demote_core_user', account_id);
+  tx.addOperation('demote_core_user', eth_addr);
   tx.addOperation('nop');
 
   tx.sign(privKey, pubKey);
