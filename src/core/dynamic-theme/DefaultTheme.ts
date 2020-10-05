@@ -1,8 +1,7 @@
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
-export const COLOR_CHROMIA_LIGHTER = '#fbf8ff';
-export const COLOR_CHROMIA_LIGHT = '#f9f6fd';
-export const COLOR_GRAY = '#c0bdc3';
+export const COLOR_CHROMIA_LIGHTER = '#FEFEFE';
+export const COLOR_CHROMIA_LIGHT = '#fafafa';
 export const COLOR_CHROMIA_DARK_LIGHTER = '#333037';
 export const COLOR_CHROMIA_DARK = '#1F1A23';
 export const COLOR_CHROMIA_DARKER = '#1e1b23';
@@ -12,7 +11,7 @@ export const COLOR_STEEL_BLUE = '#4D617D';
 export const COLOR_PURPLE = '#CC91F0';
 export const COLOR_SOFT_PINK = '#FFB0C2';
 export const COLOR_YELLOW = '#F8C749';
-export const COLOR_OFF_WHITE = '#FFF8F8';
+export const COLOR_OFF_WHITE = '#f9f6fd';
 export const COLOR_HEDGET_GREEN = '#4ACEA5';
 export const COLOR_HEDGET_OFF_GREEN = '#66D5B1';
 
