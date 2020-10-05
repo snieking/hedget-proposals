@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import { KeyPair } from 'ft3-lib';
 import { Operation } from './Operation';
 import { createGtxClient } from './blockchain-helper';
-import { KeyPair } from 'ft3-lib';
 
 export class Transaction {
   private operations: Operation[] = [];
