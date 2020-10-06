@@ -17,8 +17,9 @@ operation create_proposal (account_id: byte_array, auth_descriptor_id: byte_arra
 	appName: name, title: text, description: text, options: list<text>
 ) {
 	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
-	
-	
+
+	require(options.size() == set<text>(options).size(), "Duplicate options not allowed");
+
 	val numeric_id = app.get_and_increment_id(appName);
 	val id = 'HGET-' + numeric_id;
 	

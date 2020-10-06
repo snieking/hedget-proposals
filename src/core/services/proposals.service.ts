@@ -60,10 +60,12 @@ export async function voteForOptionInPoll(accountState: AccountState, id: string
     .confirm();
 }
 
-export function createNewProposal(accountState: AccountState, title: string, description: string) {
+export function createNewProposal(accountState: AccountState, title: string, description: string, options: string[]) {
   return Transaction.create()
     .addNop()
-    .addOperation(addAuthToOperation(accountState, new Operation('create_proposal', ['HGET', title, description, ['Approve', 'Reject']])))
+    .addOperation(
+      addAuthToOperation(accountState, new Operation('create_proposal', ['HGET', title, description, options]))
+    )
     .sign(accountState.keyPair)
     .confirm();
 }
