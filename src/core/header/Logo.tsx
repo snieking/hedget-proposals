@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
+import * as config from '../../config';
 
 const useStyles = makeStyles({
   wrapper: {
@@ -13,8 +14,8 @@ const useStyles = makeStyles({
   },
   image: {
     marginTop: '15px',
-    height: '46px',
-    width: '128px',
+    height: '56px',
+    width: '140px',
   },
 });
 
@@ -24,7 +25,7 @@ const Logo: React.FunctionComponent = () => {
   return (
     <div className={classes.logoWrapper}>
       <RouterLink to="/">
-        <img src="assets/hedget-logo.png" alt="Hedget logo" className={classes.image} />
+        <img src="https://hedget.com/images/logo.png" alt="Hedget logo" className={classes.image} />
       </RouterLink>
     </div>
   );

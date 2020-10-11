@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import { connect, Provider } from 'react-redux';
-import {CssBaseline, makeStyles} from '@material-ui/core';
+import { CssBaseline, makeStyles } from '@material-ui/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Store } from 'redux';
 // import ReactPiwik from 'react-piwik';
 import DynamicTheme from './core/dynamic-theme/DynamicTheme';
 import Header from './core/header/Header';
 import Spinners from './core/spinners/Spinners';
-// import config from './config';
+import config from './config';
 // import history from './history';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
 import { AccountDetail } from './core/redux/account/account.state';
 import { checkAmountStaked, checkCoreAccount } from './core/redux/account/account.actions';
 import { initLogger } from './util/log-util';
-import SnackbarHolder from "./core/snackbar/SnackbarHolder";
+import SnackbarHolder from './core/snackbar/SnackbarHolder';
 
 interface Props {
   store: Store<ApplicationState>;
@@ -57,7 +57,7 @@ const App: React.FunctionComponent<Props> = (props) => {
     <Provider store={props.store}>
       <DynamicTheme>
         <CssBaseline />
-        <Router basename="/proposals">
+        <Router basename={config.baseUrl}>
           <div className={classes.wrapper}>
             <Header />
             <Spinners />
