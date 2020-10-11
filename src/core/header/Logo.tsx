@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import * as config from '../../config';
 
 const useStyles = makeStyles({
   wrapper: {
