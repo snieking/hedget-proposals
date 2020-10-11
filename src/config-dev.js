@@ -1,7 +1,7 @@
 module.exports = {
-  baseUrl: '/',
+  baseUrl: '/proposals',
   blockchain: {
-    nodeApiUrl: 'http://35.205.218.13:7740',
+    nodeApiUrl: 'https://hedget.com/proposals/node',
     rid: '57862189D255A82ED1DCCD925BD9F02DE8CFD32CF94D43022D68ED839FB91E01',
     explorerBaseUrl: 'https://explorer-testnet.chromia.com/',
   },
