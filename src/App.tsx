@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import { connect, Provider } from 'react-redux';
-import { CssBaseline } from '@material-ui/core';
+import {CssBaseline, makeStyles} from '@material-ui/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Store } from 'redux';
 // import ReactPiwik from 'react-piwik';
@@ -15,6 +15,7 @@ import ApplicationState from './core/redux/application-state';
 import { AccountDetail } from './core/redux/account/account.state';
 import { checkAmountStaked, checkCoreAccount } from './core/redux/account/account.actions';
 import { initLogger } from './util/log-util';
+import SnackbarHolder from "./core/snackbar/SnackbarHolder";
 
 interface Props {
   store: Store<ApplicationState>;
@@ -22,6 +23,13 @@ interface Props {
   checkCoreAccount: typeof checkCoreAccount;
   checkAmountStaked: typeof checkAmountStaked;
 }
+
+const useStyles = makeStyles({
+  wrapper: {
+    margin: '0 auto',
+    width: '80%',
+  },
+});
 
 // const piwik = config.matomo.enabled
 //   ? new ReactPiwik({
@@ -36,6 +44,8 @@ interface Props {
 initLogger();
 
 const App: React.FunctionComponent<Props> = (props) => {
+  const classes = useStyles();
+
   useEffect(() => {
     if (props.accountDetail) {
       props.checkCoreAccount();
@@ -47,10 +57,13 @@ const App: React.FunctionComponent<Props> = (props) => {
     <Provider store={props.store}>
       <DynamicTheme>
         <CssBaseline />
-        <Router>
-          <Header />
-          <Spinners />
-          <Content />
+        <Router basename="/proposals">
+          <div className={classes.wrapper}>
+            <Header />
+            <Spinners />
+            <Content />
+            <SnackbarHolder />
+          </div>
         </Router>
       </DynamicTheme>
     </Provider>

@@ -1,19 +1,37 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+
 import React, { useState, useEffect } from 'react';
-import { Typography, makeStyles, Grid, IconButton } from '@material-ui/core';
-import CategoryIcon from '@material-ui/icons/Category';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import { Typography, makeStyles, Grid } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+import Button from '@material-ui/core/Button';
 import { ProposalOverview } from '../../../core/services/proposals.model';
 import { getProposals } from '../../../core/services/proposals.service';
 import { COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
 import ProposalOverviewList from './ProposalOverviewList';
 import AddProposal from './AddProposal';
 import ApplicationState from '../../../core/redux/application-state';
-import Stake from '../../../Stake';
+import Stake from '../../../shared/Stake';
+import SectionDivider from '../../../shared/SectionDivider';
 
 const useStyles = makeStyles({
-  filterPanel: {
+  createNew: {
+    cursor: 'pointer',
+    display: 'inline',
+    marginLeft: '20px',
+    position: 'relative',
+    top: -2,
+  },
+  filterPanel: {},
+  filterPickerWrapper: {
+    marginTop: '10px',
+    maxWidth: '400px',
+  },
+  filterDescription: {
+    marginRight: '10px',
+  },
+  filterButton: {
+    marginLeft: '5px',
+    borderRadius: '25px',
     marginBottom: '10px',
   },
   filterIcon: {
@@ -84,82 +102,124 @@ const AppProposals: React.FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [includeCore, includeCommunity, includeCompleted, includeInProgress]);
 
+  const CategoryPickerGridItem: React.FunctionComponent = () => {
+    return (
+      <Grid item md={6} sm={12} className={classes.filterPickerWrapper}>
+        <Typography variant="body1" component="span" className={classes.filterDescription}>
+          Category
+        </Typography>
+        <Button
+          variant={includeCore && includeCommunity ? 'contained' : 'outlined'}
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => {
+            setIncludeCore(true);
+            setIncludeCommunity(true);
+          }}
+        >
+          All
+        </Button>
+        <Button
+          variant={includeCore && !includeCommunity ? 'contained' : 'outlined'}
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => {
+            setIncludeCore(true);
+            setIncludeCommunity(false);
+          }}
+        >
+          Core
+        </Button>
+        <Button
+          variant={!includeCore && includeCommunity ? 'contained' : 'outlined'}
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => {
+            setIncludeCommunity(true);
+            setIncludeCore(false);
+          }}
+        >
+          Community
+        </Button>
+      </Grid>
+    );
+  };
+
+  const StatusPickerGridItem: React.FunctionComponent = () => {
+    return (
+      <Grid item md={6} sm={12} className={classes.filterPickerWrapper}>
+        <Typography variant="body1" component="span" className={classes.filterDescription}>
+          Status
+        </Typography>
+        <Button
+          variant={includeInProgress && includeCompleted ? 'contained' : 'outlined'}
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => {
+            setIncludeInProgress(true);
+            setIncludeCompleted(true);
+          }}
+        >
+          All
+        </Button>
+        <Button
+          variant={includeInProgress && !includeCompleted ? 'contained' : 'outlined'}
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => {
+            setIncludeInProgress(true);
+            setIncludeCompleted(false);
+          }}
+        >
+          In Progress
+        </Button>
+        <Button
+          variant={!includeInProgress && includeCompleted ? 'contained' : 'outlined'}
+          color="primary"
+          className={classes.filterButton}
+          onClick={() => {
+            setIncludeCompleted(true);
+            setIncludeInProgress(false);
+          }}
+        >
+          Completed
+        </Button>
+      </Grid>
+    );
+  };
+
+  const FilterPickerGrid: React.FunctionComponent = () => {
+    return (
+      <Grid container>
+        <CategoryPickerGridItem />
+        <StatusPickerGridItem />
+      </Grid>
+    );
+  };
+
+  const Header: React.FunctionComponent = () => {
+    return (
+      <>
+        <Typography variant="h5" component="span">
+          Proposals
+        </Typography>
+        <div className={classes.createNew} onClick={openAddProposalDialog}>
+          <Typography variant="body1" component="span" color="primary">
+            + Create new
+          </Typography>
+        </div>
+      </>
+    );
+  };
+
   return (
     <div>
-      <Grid container className={classes.filterPanel}>
-        <Grid item md={8} sm={12}>
-          <CategoryIcon className={classes.filterIcon} />
-          <Typography
-            variant="body2"
-            component="span"
-            className={`${classes.optionItem} ${includeCommunity ? classes.clickable : ''} ${
-              includeCore ? classes.clicked : ''
-            }`}
-            onClick={() => {
-              if (includeCommunity) {
-                setIncludeCore(!includeCore);
-              }
-            }}
-          >
-            Core
-          </Typography>
-          <span className={classes.separator}>•</span>
-          <Typography
-            variant="body2"
-            component="span"
-            className={`${classes.optionItem} ${includeCore ? classes.clickable : ''} ${
-              includeCommunity ? classes.clicked : ''
-            }`}
-            onClick={() => {
-              if (includeCore) {
-                setIncludeCommunity(!includeCommunity);
-              }
-            }}
-          >
-            Community
-          </Typography>
-          <CheckCircleIcon className={classes.filterIcon} style={{ marginLeft: '20px' }} />
-          <Typography
-            variant="body2"
-            component="span"
-            className={`${classes.optionItem} ${includeInProgress ? classes.clickable : ''} ${
-              includeCompleted ? classes.clicked : ''
-            }`}
-            onClick={() => {
-              if (includeInProgress) {
-                setIncludeCompleted(!includeCompleted);
-              }
-            }}
-          >
-            Completed
-          </Typography>
-          <span className={classes.separator}>•</span>
-          <Typography
-            variant="body2"
-            component="span"
-            className={`${classes.optionItem} ${includeCompleted ? classes.clickable : ''} ${
-              includeInProgress ? classes.clicked : ''
-            }`}
-            onClick={() => {
-              if (includeCompleted) {
-                setIncludeInProgress(!includeInProgress);
-              }
-            }}
-          >
-            In Progress
-          </Typography>
-        </Grid>
-        <Grid item md={4} sm={12}>
-          {accountState.accountDetail && (
-            <IconButton onClick={openAddProposalDialog}>
-              <NoteAddIcon fontSize="large" />
-            </IconButton>
-          )}
-          <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />
-        </Grid>
-      </Grid>
+      <Header />
+      <FilterPickerGrid />
+      <SectionDivider />
       <ProposalOverviewList proposals={proposals} />
       <AddProposal open={addDialogOpen} onClose={closeAddProposalDialog} refreshProposals={refreshProposals} />
+      <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   );
 };

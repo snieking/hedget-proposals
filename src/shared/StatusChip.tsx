@@ -1,15 +1,37 @@
 import React from 'react';
-import { Chip } from '@material-ui/core';
-import { COLOR_HEDGET_GREEN, COLOR_YELLOW } from '../core/dynamic-theme/DefaultTheme';
+import { makeStyles } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 interface Props {
   status: string;
   className?: string;
 }
 
+const useStyles = makeStyles({
+  wrapper: {
+    textAlign: 'center',
+    width: '100px',
+    display: 'inline',
+    borderRadius: '5px',
+  },
+  text: {
+    marginLeft: '10px',
+    marginRight: '10px',
+    marginTop: '10px',
+    marginBottom: '10px',
+  },
+});
+
 const StatusChip: React.FunctionComponent<Props> = (props) => {
-  const color = () => (props.status === 'Completed' ? COLOR_HEDGET_GREEN : COLOR_YELLOW);
-  return <Chip label={props.status} className={props.className} style={{ backgroundColor: color() }} />;
+  const classes = useStyles();
+  const color = () => (props.status === 'Completed' ? '#D9FCEA' : '#FFEEBE');
+  return (
+    <div className={`${props.className} ${classes.wrapper}`} style={{ backgroundColor: color() }}>
+      <Typography variant="body2" component="span" className={classes.text}>
+        {props.status}
+      </Typography>
+    </div>
+  );
 };
 
 export default StatusChip;

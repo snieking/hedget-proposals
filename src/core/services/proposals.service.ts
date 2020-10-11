@@ -24,8 +24,14 @@ export function getProposals(categoryFilter: string, statusFilter: string): Prom
   }
 
   if (!categoryFilter) {
-    if (statusFilter === 'In Progress') return query('get_proposals_ending_after_timestamp', { timestamp: Date.now() });
-    if (statusFilter === 'Completed') return query('get_proposals_ended_before_timestamp', { timestamp: Date.now() });
+    if (statusFilter === 'In Progress')
+      return query('get_proposals_ending_after_timestamp', {
+        timestamp: Date.now(),
+      }).then((proposals: ProposalOverview[]) => proposals.map((p) => addStatus(p)));
+    if (statusFilter === 'Completed')
+      return query('get_proposals_ended_before_timestamp', {
+        timestamp: Date.now(),
+      }).then((proposals: ProposalOverview[]) => proposals.map((p) => addStatus(p)));
   }
 
   if (statusFilter === 'In Progress')

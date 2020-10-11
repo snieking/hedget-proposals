@@ -3,11 +3,12 @@ import { IconButton, makeStyles } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import { AccountCircle } from '@material-ui/icons';
 import About from './About';
-import Stake from '../../Stake';
+import Stake from '../../shared/Stake';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     marginTop: '10px',
+    textAlign: 'right',
   },
   icon: {
     width: '24px',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DialogTitle, DialogContent, TextField, DialogActions, Button, Dialog } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import {connect, useSelector} from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -9,11 +9,14 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import { COLOR_RED } from '../../../core/dynamic-theme/DefaultTheme';
 import ApplicationState from '../../../core/redux/application-state';
 import { createNewProposal } from '../../../core/services/proposals.service';
+import { notifyError, notifySuccess } from '../../../core/redux/snackbar/snackbar-actions';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   refreshProposals: () => void;
+  notifyError: typeof notifyError;
+  notifySuccess: typeof notifySuccess;
 }
 
 const useStyles = makeStyles({
@@ -103,8 +106,13 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
       return;
     }
 
-    await createNewProposal(accountState, title, description, options);
+    try {
+      await createNewProposal(accountState, title, description, options);
+    } catch (error) {
+      props.notifyError(error?.message);
+    }
     props.onClose();
+    props.notifySuccess('Created New Proposal');
     setTitle('');
     setDescription('');
     setOptions(DEFAULT_OPTIONS);
@@ -154,4 +162,9 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-export default AddProposal;
+const mapDispatchToProps = {
+  notifySuccess,
+  notifyError,
+}
+
+export default connect(null, mapDispatchToProps) (AddProposal);

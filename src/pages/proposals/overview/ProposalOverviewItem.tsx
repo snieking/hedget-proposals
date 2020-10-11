@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import CategoryIcon from '@material-ui/icons/Category';
-import ScheduleIcon from '@material-ui/icons/Schedule';
 import { Link } from 'react-router-dom';
 import { ProposalOverview } from '../../../core/services/proposals.model';
 import StatusChip from '../../../shared/StatusChip';
@@ -11,7 +10,8 @@ import {
   COLOR_CHROMIA_DARKER,
   COLOR_CHROMIA_LIGHT,
 } from '../../../core/dynamic-theme/DefaultTheme';
-import { hoursFromNow, formatedAuthor } from '../util';
+import { formatedAuthor } from '../util';
+import TimeRemainingDetail from '../TimeRemainingDetail';
 
 interface Props {
   proposal: ProposalOverview;
@@ -28,20 +28,23 @@ const useStyles = makeStyles({
     '&:hover': {
       backgroundColor: COLOR_CHROMIA_LIGHT,
     },
+    marginBottom: '10px',
   },
   detailsWrapper: {
     marginTop: '5px',
   },
   chip: {
-    marginRight: '20px',
+    marginRight: '15px',
   },
   detail: {
+    position: 'relative',
+    top: '6px',
     display: 'inline',
-    marginRight: '10px',
+    marginRight: '15px',
   },
   iconText: {
     position: 'relative',
-    top: -8,
+    top: -6,
     left: 2,
     maxWidth: '2ch',
     marginLeft: '2px',
@@ -51,33 +54,20 @@ const useStyles = makeStyles({
 const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
-  const getTimeDetail = () => {
-    const currentTime = Date.now();
-
-    if (props.proposal.endTimestamp > currentTime) {
-      return (
-        <div className={classes.detail}>
-          <ScheduleIcon />
-          <Typography variant="body2" component="span" className={classes.iconText}>
-            {hoursFromNow(props.proposal.endTimestamp)} hours remaining
-          </Typography>
-        </div>
-      );
-    }
-
-    return null;
-  };
-
   return (
     <Link className={classes.link} to={`/proposal/${props.proposal.id}`}>
       <div className={classes.wrapper}>
-        <div>
-          <StatusChip status={props.proposal.status} className={classes.chip} />
-          <Typography variant="h6" component="span">
-            <b>{props.proposal.id}:</b> {props.proposal.title}
-          </Typography>
-        </div>
+        <Typography variant="h6" component="span">
+          <b>{props.proposal.id}:</b> {props.proposal.title}
+        </Typography>
         <div className={classes.detailsWrapper}>
+          <StatusChip status={props.proposal.status} className={classes.chip} />
+          <div className={classes.detail}>
+            <CategoryIcon />
+            <Typography variant="body2" component="span" className={classes.iconText}>
+              {props.proposal.category}
+            </Typography>
+          </div>
           <div className={classes.detail}>
             <PersonIcon />
             <Typography variant="body2" component="span" className={classes.iconText}>
@@ -85,12 +75,8 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
             </Typography>
           </div>
           <div className={classes.detail}>
-            <CategoryIcon />
-            <Typography variant="body2" component="span" className={classes.iconText}>
-              {props.proposal.category}
-            </Typography>
+            <TimeRemainingDetail endTimestamp={props.proposal.endTimestamp} iconTextClassName={classes.iconText} />
           </div>
-          {getTimeDetail()}
         </div>
       </div>
     </Link>

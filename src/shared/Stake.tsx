@@ -13,11 +13,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { util } from 'postchain-client';
 import log from 'loglevel';
-import { POST } from './lib/util';
-import useMetaMask from './lib/hooks/use-meta-mask';
-import ApplicationState from './core/redux/application-state';
-import { setAccountDetail } from './core/redux/account/account.actions';
-import * as config from './config';
+import { POST } from '../lib/util';
+import useMetaMask from '../lib/hooks/use-meta-mask';
+import ApplicationState from '../core/redux/application-state';
+import { setAccountDetail } from '../core/redux/account/account.actions';
+import * as config from '../config';
+import SectionDivider from './SectionDivider';
+import { snackbarActions } from '../core/redux/snackbar/snackbar-actions';
 
 const useStyles = makeStyles({
   description: {
@@ -43,14 +45,13 @@ const useStyles = makeStyles({
   },
 });
 
-const StakeMain: React.FunctionComponent = () => {
+const StakeMain: React.FunctionComponent<{ onClose: () => void }> = ({ onClose }) => {
   const classes = useStyles();
   const { loginAPI, haveAccounts, selectedAddress, provider, updateStakeState } = useMetaMask();
   const [stakeAmount, setStakeAmount] = React.useState(10);
   const [duration, setDuration] = React.useState(7);
   const [loading, setLoading] = React.useState(false);
   const [initialized, setInitialized] = React.useState(false);
-  const [stakeError, setStakeError] = React.useState('');
   const contracts = loginAPI?.contracts;
   const accountState = useSelector((state: ApplicationState) => state.account);
   const dispatch = useDispatch();
@@ -71,10 +72,7 @@ const StakeMain: React.FunctionComponent = () => {
 
   async function login(stakeUntilDate: number) {
     const wasLoading = loading;
-    if (!loading) {
-      if (stakeError !== '') setStakeError('');
-      setLoading(true);
-    }
+
     try {
       const pubkey = accountState.keyPair.pubKey.toString('hex');
       const loginMessage = `Please sign your public key '${pubkey}' in order to login`;
@@ -96,10 +94,10 @@ const StakeMain: React.FunctionComponent = () => {
           })
         );
       } else {
-        setStakeError('Login server failed, please try later');
+        dispatch(snackbarActions.notifyError('Login server failed, please try later'));
       }
     } catch (e) {
-      setStakeError(`Error: ${e.message}`);
+      dispatch(snackbarActions.notifyError(`Error: ${e.message}`));
     }
     if (!wasLoading) setLoading(false);
   }
@@ -107,13 +105,21 @@ const StakeMain: React.FunctionComponent = () => {
   async function stake() {
     if (!contracts.staker || !selectedAddress || !stakeAmount || !duration) return;
 
-    if (stakeError !== '') setStakeError('');
     if (loginAPI.stakeState && loginAPI.stakeState.amount > stakeAmount) {
-      setStakeError('Cannot reduce stake');
+      dispatch(snackbarActions.notifyError('You cannot reduce your stake'));
       return;
     }
     try {
-      // TODO: do not allow to reduce duration
+      if (stakeAmount < 10) {
+        dispatch(snackbarActions.notifyError('You must stake at least 10 HGET'));
+        return;
+      }
+
+      if (duration < 7) {
+        dispatch(snackbarActions.notifyError('You must stake for at least 7 days'));
+        return;
+      }
+
       const actualStakeAmount = stakeAmount * 1000000;
       const allowance = await contracts.hget.getAllowance(selectedAddress);
       setLoading(true);
@@ -125,35 +131,35 @@ const StakeMain: React.FunctionComponent = () => {
       await updateStakeState();
       await login(stakeUntilDate);
     } catch (e) {
-      setStakeError(`Error: ${e.message}`);
+      dispatch(snackbarActions.notifyError(`Error: ${e.message}`));
     }
     setLoading(false);
   }
 
   const mainContent = () => {
     return (
-      <Grid container spacing={4}>
-        {(!loginAPI?.stakeState || !loginAPI.stakeState.isFresh) && (
-          <Typography variant="body2" className={classes.description}>
-            You need to stake HGET tokens to cast a vote. Staking freezes tokens for a certain duration. Minimum amount
-            to stake is 10 HGET, minimum duration is 7 days. Tokens shall be frozen for at least 7 days from the moment
-            a vote is cast.
-          </Typography>
-        )}
+      <Grid container spacing={1}>
         {loginAPI?.stakeState && (
           <Grid item xs={12}>
-            <div>
-              <Typography variant="body2" component="p">
-                <span className={classes.stakedTokens}>Tokens: </span>
-                {loginAPI.stakeState.amount} HGET
-              </Typography>
-            </div>
-            <div>
-              <Typography variant="body2">
-                <span className={classes.stakedTokens}>Until: </span>
-                {new Date(loginAPI.stakeState.until * 1000).toLocaleDateString(window.navigator.language)}
-              </Typography>
-            </div>
+            <Grid container justify="center">
+              <Grid item xs={12} md={6}>
+                <Typography variant="body2" component="p">
+                  Tokens
+                </Typography>
+                <Typography variant="body1" component="p">
+                  {loginAPI.stakeState.amount} HGET
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography variant="body2" component="p">
+                  Frozen until
+                </Typography>
+                <Typography variant="body1" component="p">
+                  {new Date(loginAPI.stakeState.until * 1000).toLocaleDateString(window.navigator.language)}
+                </Typography>
+              </Grid>
+            </Grid>
+            <SectionDivider />
           </Grid>
         )}
         {needRefresh && (
@@ -175,25 +181,36 @@ const StakeMain: React.FunctionComponent = () => {
           </Grid>
         )}
         <Grid item container>
-          <div>
-            <TextField
+          <TextField
+            variant="outlined"
+            label="Amount to stake"
+            type="number"
+            fullWidth
+            value={stakeAmount}
+            inputProps={{ min: 10 }}
+            onChange={(e) => setStakeAmount(parseInt(e.target.value))}
+            className={classes.textInput}
+          />
+          <TextField
+            variant="outlined"
+            label="Duration"
+            type="number"
+            fullWidth
+            value={duration}
+            inputProps={{ min: 7 }}
+            onChange={(e) => setDuration(parseInt(e.target.value))}
+            className={classes.textInput}
+          />
+          <div style={{ textAlign: 'right', display: 'inline-block', width: '100%' }}>
+            <Button
               variant="outlined"
-              label="Amount to stake"
-              type="number"
-              value={stakeAmount}
-              inputProps={{ min: 10 }}
-              onChange={(e) => setStakeAmount(parseInt(e.target.value))}
-              className={classes.textInput}
-            />
-            <TextField
-              variant="outlined"
-              label="Duration"
-              type="number"
-              value={duration}
-              inputProps={{ min: 7 }}
-              onChange={(e) => setDuration(parseInt(e.target.value))}
-              className={classes.textInput}
-            />
+              color="secondary"
+              onClick={onClose}
+              disabled={loading}
+              className={classes.button}
+            >
+              Cancel
+            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -201,13 +218,8 @@ const StakeMain: React.FunctionComponent = () => {
               disabled={loading}
               className={classes.button}
             >
-              {loading ? <CircularProgress size={24} /> : <span>Stake</span>}
+              {loading ? <CircularProgress size={24} /> : <span>{loginAPI?.stakeState ? 'Re-stake' : 'Stake'}</span>}
             </Button>
-            {stakeError && (
-              <Typography variant="body2" color="error" className={classes.message}>
-                {stakeError}
-              </Typography>
-            )}
           </div>
         </Grid>
       </Grid>
@@ -248,7 +260,7 @@ const StakeDialog: React.FunctionComponent<{ open: boolean; onClose: () => void 
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Account</DialogTitle>
-      {open && <StakeMain />}
+      <StakeMain onClose={onClose} />
     </Dialog>
   );
 };

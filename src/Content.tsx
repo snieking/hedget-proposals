@@ -1,16 +1,18 @@
 import React from 'react';
 import { Switch, Route } from 'react-router';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core';
 import AppProposals from './pages/proposals/overview/AppProposals';
 import FullProposal from './pages/proposals/FullProposal';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     margin: '0 auto',
-    marginTop: '30px',
-    width: '80%',
+    marginTop: '50px',
+    [theme.breakpoints.up('lg')]: {
+      width: '80%',
+    },
   },
-});
+}));
 
 const Content: React.FunctionComponent = () => {
   const classes = useStyles();
