@@ -1,5 +1,5 @@
 module.exports = {
-  baseUrl: '/proposals',
+  baseUrl: '/',
   blockchain: {
     nodeApiUrl: 'https://hedget.com/proposals/node',
     rid: '57862189D255A82ED1DCCD925BD9F02DE8CFD32CF94D43022D68ED839FB91E01',
