@@ -6,7 +6,7 @@ import Logo from './Logo';
 const Header: React.FunctionComponent<unknown> = () => {
   return (
     <>
-      <Grid container alignContent="center">
+      <Grid container alignContent="center" style={{ width: '80%', margin: '0 auto' }}>
         <Grid item xs={8}>
           <Logo />
         </Grid>

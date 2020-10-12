@@ -6,14 +6,14 @@ export const COLOR_CHROMIA_DARK_LIGHTER = '#333037';
 export const COLOR_CHROMIA_DARK = '#1F1A23';
 export const COLOR_CHROMIA_DARKER = '#1e1b23';
 export const COLOR_RED = '#FF405E';
-export const COLOR_ORANGE = '#FF702B';
 export const COLOR_STEEL_BLUE = '#4D617D';
 export const COLOR_PURPLE = '#CC91F0';
-export const COLOR_SOFT_PINK = '#FFB0C2';
 export const COLOR_YELLOW = '#F8C749';
 export const COLOR_OFF_WHITE = '#f9f6fd';
 export const COLOR_HEDGET_GREEN = '#4ACEA5';
-export const COLOR_HEDGET_OFF_GREEN = '#66D5B1';
+
+export const COLOR_DARKER_GREEN = '#52AA65';
+export const COLOR_GRAY = '#7B7B7B';
 
 export const lightTheme = createMuiTheme({
   palette: {

@@ -5,6 +5,7 @@ import { hoursFromNow } from './util';
 
 interface Props {
   endTimestamp: number;
+  iconClassName?: string;
   detailWrapperClassName?: string;
   iconTextClassName?: string;
 }
@@ -15,7 +16,7 @@ const TimeRemainingDetail: React.FunctionComponent<Props> = (props) => {
   if (props.endTimestamp > currentTime) {
     return (
       <>
-        <TimerIcon />
+        <TimerIcon className={props.iconClassName} />
         <Typography variant="body2" component="span" className={props.iconTextClassName}>
           {hoursFromNow(props.endTimestamp)} hours remaining
         </Typography>

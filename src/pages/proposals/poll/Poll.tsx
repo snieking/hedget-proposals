@@ -10,6 +10,7 @@ import { PollOption } from '../../../core/services/proposals.model';
 import ApplicationState from '../../../core/redux/application-state';
 import PollOptionRenderer from './PollOptionRenderer';
 import { notifyError, notifySuccess } from '../../../core/redux/snackbar/snackbar-actions';
+import { COLOR_HEDGET_GREEN, COLOR_YELLOW } from '../../../core/dynamic-theme/DefaultTheme';
 
 interface Props {
   proposalId: string;
@@ -66,6 +67,21 @@ const Poll: React.FunctionComponent<Props> = (props) => {
       .catch((error) => props.notifyError(error?.message));
   }
 
+  function getOptionColor(index: number) {
+    switch (index) {
+      case 0:
+        return COLOR_HEDGET_GREEN;
+      case 1:
+        return COLOR_YELLOW;
+      case 2:
+        return '#0B88CE';
+      case 3:
+        return '#884BD4';
+      default:
+        return COLOR_HEDGET_GREEN;
+    }
+  }
+
   return (
     <div>
       {getVoteStatusText() && (
@@ -80,6 +96,7 @@ const Poll: React.FunctionComponent<Props> = (props) => {
           pollOption={po}
           votedFor={optionVote}
           total={pollOptions.map((p) => p.votes).reduce((a, b) => a + b, 0)}
+          color={getOptionColor(pollOptions.indexOf(po))}
         />
       ))}
     </div>

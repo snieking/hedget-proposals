@@ -18,7 +18,7 @@ import {
 } from '../../core/services/proposals.service';
 import StatusChip from '../../shared/StatusChip';
 import ApplicationState from '../../core/redux/application-state';
-import { COLOR_RED } from '../../core/dynamic-theme/DefaultTheme';
+import { COLOR_DARKER_GREEN, COLOR_GRAY, COLOR_RED } from '../../core/dynamic-theme/DefaultTheme';
 import { formatedAuthor } from './util';
 import TimeRemainingDetail from './TimeRemainingDetail';
 import SectionDivider from '../../shared/SectionDivider';
@@ -33,9 +33,26 @@ const useStyles = makeStyles({
     top: -10,
     cursor: 'pointer',
   },
+  link: {
+    textDecoration: 'none',
+  },
+  returnText: {
+    color: COLOR_DARKER_GREEN,
+    fontWeight: 'bold',
+    position: 'relative',
+    top: -5,
+    textDecoration: 'none',
+    marginLeft: '5px',
+  },
+  returnIcon: {
+    color: COLOR_DARKER_GREEN,
+  },
   stats: {
     display: 'inline',
     marginRight: '10px',
+  },
+  statsIcon: {
+    color: COLOR_GRAY,
   },
   iconDetailsWrapper: {
     display: 'inline',
@@ -46,10 +63,15 @@ const useStyles = makeStyles({
     position: 'relative',
     top: -7,
     marginLeft: '2px',
+    color: COLOR_GRAY,
   },
   title: {
     marginTop: '20px',
     marginBottom: '5px',
+  },
+  titleId: {
+    color: COLOR_GRAY,
+    fontWeight: 'bold',
   },
   coreActions: {
     float: 'right',
@@ -59,9 +81,6 @@ const useStyles = makeStyles({
   },
   description: {
     whiteSpace: 'pre-wrap',
-  },
-  link: {
-    textDecoration: 'none',
   },
 });
 
@@ -96,7 +115,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
         </div>
         <div className={classes.iconDetailsWrapper}>
           <div className={classes.stats}>
-            <PersonIcon />
+            <PersonIcon className={classes.statsIcon} />
             <a
               href={`https://etherscan.io/address/${proposal.author}`}
               className={classes.link}
@@ -109,13 +128,17 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
             </a>
           </div>
           <div className={classes.stats}>
-            <CategoryIcon />
+            <CategoryIcon className={classes.statsIcon} />
             <Typography variant="body2" component="span" className={classes.iconText}>
               {proposal.category}
             </Typography>
           </div>
           <div className={classes.stats}>
-            <TimeRemainingDetail endTimestamp={proposal.endTimestamp} iconTextClassName={classes.iconText} />
+            <TimeRemainingDetail
+              endTimestamp={proposal.endTimestamp}
+              iconClassName={classes.statsIcon}
+              iconTextClassName={classes.iconText}
+            />
           </div>
           {accountState.isCoreAccount && (
             <div className={classes.coreActions}>
@@ -140,22 +163,28 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
   return (
     <div>
       <div className={classes.returnWrapper}>
-        <RouterLink to="/">
-          <BackspaceIcon />
+        <RouterLink to="/" className={classes.link}>
+          <BackspaceIcon fontSize="small" className={classes.returnIcon} />
+          <Typography variant="body2" component="span" className={classes.returnText}>
+            Back to proposals
+          </Typography>
         </RouterLink>
       </div>
-      <Typography variant="h5" component="span" className={classes.title}>
-        <b>{proposal.id}:</b> {proposal.title}
+      <Typography variant="h6" component="span" className={classes.title}>
+        <Typography variant="h6" component="span" className={classes.titleId}>
+          {proposal.id}
+        </Typography>{' '}
+        {proposal.title}
       </Typography>
       <Details />
       <SectionDivider />
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={7}>
           <Typography variant="body1" component="p" className={classes.description}>
             {proposal.description}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={5}>
           <Poll proposalId={proposal.id} />
         </Grid>
       </Grid>

@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import HowToVoteIcon from '@material-ui/icons/HowToVote';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, MuiThemeProvider } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ApplicationState from '../../../core/redux/application-state';
 import { PollOption } from '../../../core/services/proposals.model';
 import ConfirmDialog from '../../../shared/ConfirmDialog';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import {COLOR_GRAY} from "../../../core/dynamic-theme/DefaultTheme";
 
 interface Props {
   voteFor: () => void;
   pollOption: PollOption;
   votedFor: string;
   total: number;
+  color: string;
 }
 
 const useStyles = makeStyles({
   outerWrapper: {
     marginBottom: '15px',
-    padding: '5px',
+    padding: '10px',
+    backgroundColor: '#F5F5F5',
   },
   clickable: {
     cursor: 'pointer',
-  },
-  icon: {
-    float: 'left',
-    marginRight: '20px',
   },
   percentage: {
     display: 'inline',
@@ -43,21 +42,28 @@ const useStyles = makeStyles({
     position: 'relative',
   },
   upperText: {
-    display: 'inline',
+    fontWeight: 'bold',
+  },
+  lowerText: {
+    color: COLOR_GRAY,
+    fontSize: '14px',
   },
   pollBar: {
-    marginRight: '5px',
+    marginTop: '10px',
+    marginBottom: '10px',
   },
   votedFor: {
     border: '1px solid #EDF2F5',
     boxSizing: 'border-box',
     boxShadow: '0px 4px 17px rgba(0, 0, 0, 0.21)',
     borderRadius: '5px',
+    borderLeft: 'solid 3px',
   },
   notVotedFor: {
-    border: '1px solid #EDF2F5',
+    border: '1px solid #D1D6D7',
     boxSizing: 'border-box',
     borderRadius: '5px',
+    borderLeft: 'solid 3px',
   },
 });
 
@@ -66,14 +72,6 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   const accountState = useSelector((state: ApplicationState) => state.account);
-
-  useEffect(() => {
-    console.log('Changed confirmDialog: ', confirmDialogOpen);
-  }, [confirmDialogOpen]);
-
-  useEffect(() => {
-    console.log('Redrawing');
-  }, []);
 
   const hasStaked = (): boolean => accountState.amountStaked > 0;
   const votedFor = (): boolean => props.pollOption.text === props.votedFor;
@@ -87,47 +85,46 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
     }
   };
 
-  const percent = (): number => (props.pollOption.votes / props.total) * 100;
+  const percent = (): number =>
+    props.pollOption.votes !== 0 ? Math.round((props.pollOption.votes / props.total) * 100) : 0;
 
-  function LinearProgressWithLabel() {
-    const value = props.pollOption.votes > 0 ? Math.round(percent()) : 0;
-    return (
-      <Box display="flex" alignItems="center">
-        <Box width="50%" mr={1}>
-          <LinearProgress
-            color={votedFor() ? 'primary' : 'secondary'}
-            variant="determinate"
-            className={classes.pollBar}
-            value={value}
-          />
-        </Box>
-        <Box minWidth={35}>
-          <Typography variant="body2" color="textSecondary">
-            {`${value}% - ${props.pollOption.votes} HGET`}
-          </Typography>
-        </Box>
-      </Box>
-    );
-  }
+  const createPollBarTheme = () => {
+    return createMuiTheme({
+      palette: {
+        primary: {
+          main: props.color,
+        },
+      },
+    });
+  };
 
   return (
     <>
       <Box
         className={`
-        ${classes.outerWrapper}
         ${hasStaked() && !props.votedFor ? classes.clickable : ''}
         ${votedFor() ? classes.votedFor : classes.notVotedFor}
+        ${classes.outerWrapper}
        `}
+        style={{ borderLeftColor: props.color }}
         onClick={() => hasStaked() && !props.votedFor && setConfirmDialogOpen(true)}
       >
-        <HowToVoteIcon color={votedFor() ? 'primary' : 'secondary'} fontSize="large" className={classes.icon} />
         <div className={classes.optionWrapper}>
-          <div className={classes.upperText}>
-            <Typography variant="body1" component="span">
-              {props.pollOption.text}
-            </Typography>
-          </div>
-          <LinearProgressWithLabel />
+          <Typography variant="body1" component="p" className={classes.upperText}>
+            {props.pollOption.text}
+          </Typography>
+          <MuiThemeProvider theme={createPollBarTheme()}>
+            <LinearProgress
+              color="primary"
+              classes={{ colorPrimary: props.color, barColorPrimary: props.color }}
+              variant="buffer"
+              value={percent()}
+              className={classes.pollBar}
+            />
+          </MuiThemeProvider>
+          <Typography variant="body1" component="p" className={classes.lowerText}>
+            {percent()}% ({props.pollOption.votes} HGET)
+          </Typography>
         </div>
       </Box>
       <ConfirmDialog
