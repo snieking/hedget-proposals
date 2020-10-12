@@ -1,5 +1,5 @@
-import { SnackbarState } from './snackbar-state';
 import { createReducer } from '@reduxjs/toolkit';
+import { SnackbarState } from './snackbar-state';
 import { clearError, clearSuccess, notifyError, notifySuccess } from './snackbar-actions';
 
 const initialSnackbarState: SnackbarState = {

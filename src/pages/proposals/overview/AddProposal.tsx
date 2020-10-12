@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DialogTitle, DialogContent, TextField, DialogActions, Button, Dialog } from '@material-ui/core';
-import {connect, useSelector} from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -165,6 +165,6 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
 const mapDispatchToProps = {
   notifySuccess,
   notifyError,
-}
+};
 
-export default connect(null, mapDispatchToProps) (AddProposal);
+export default connect(null, mapDispatchToProps)(AddProposal);
