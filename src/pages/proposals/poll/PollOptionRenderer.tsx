@@ -4,11 +4,11 @@ import { makeStyles, MuiThemeProvider } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import ApplicationState from '../../../core/redux/application-state';
 import { PollOption } from '../../../core/services/proposals.model';
 import ConfirmDialog from '../../../shared/ConfirmDialog';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import {COLOR_GRAY} from "../../../core/dynamic-theme/DefaultTheme";
+import { COLOR_GRAY } from '../../../core/dynamic-theme/DefaultTheme';
 
 interface Props {
   voteFor: () => void;
