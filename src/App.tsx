@@ -8,7 +8,7 @@ import { Store } from 'redux';
 import DynamicTheme from './core/dynamic-theme/DynamicTheme';
 import Header from './core/header/Header';
 import Spinners from './core/spinners/Spinners';
-import config from './config';
+// import config from './config';
 // import history from './history';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
@@ -56,7 +56,7 @@ const App: React.FunctionComponent<Props> = (props) => {
     <Provider store={props.store}>
       <DynamicTheme>
         <CssBaseline />
-        <Router basename={config.baseUrl}>
+        <Router>
           <div className={classes.wrapper}>
             <Header />
             <Spinners />

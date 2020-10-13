@@ -67,7 +67,7 @@ jobs:
 
       - name: Deploy to S3 [develop] Bucket
         shell: bash
-        run: aws s3 sync . s3://dev.proposia.com/ --follow-symlinks --delete --cache-control max-age=600
+        run: aws s3 sync . s3://dev.proposia.com/ --follow-symlinks --delete --cache-control max-age=60
         working-directory: build
         if: github.ref == 'refs/heads/develop'
 
