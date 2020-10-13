@@ -56,7 +56,7 @@ const App: React.FunctionComponent<Props> = (props) => {
     <Provider store={props.store}>
       <DynamicTheme>
         <CssBaseline />
-        <Router basename={config.basePath}>
+        <Router basename={config.baseUrl}>
           <div className={classes.wrapper}>
             <Header />
             <Spinners />
