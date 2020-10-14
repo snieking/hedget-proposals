@@ -20,12 +20,19 @@ operation create_proposal (account_id: byte_array, auth_descriptor_id: byte_arra
 	require(options.size() == set<text>(options).size(), "Duplicate options not allowed");
 
 	val user = account.retrieve_verified_user(account_id, auth_descriptor_id);
+	val is_core_user = account._is_core_user(user);
+	
+	require(is_core_user or (
+		options.size() == 2 and 
+		options[0] == "Approve" and 
+		options[1] == "Reject"
+	), "Only core user is allowed to create custom options");
 
 	val numeric_id = app.get_and_increment_id(appName);
 	val id = 'HGET-' + numeric_id;
 	
 	var category = 'Community';
-	if (account._is_core_user(user)) {
+	if (is_core_user) {
 		category = 'Core';
 	}
 	

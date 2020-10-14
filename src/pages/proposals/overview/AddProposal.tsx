@@ -77,13 +77,14 @@ const AddProposal: React.FunctionComponent<Props> = (props) => {
             defaultValue={options[i - 1] ? options[i - 1] : ''}
             className={classes.textField}
             onChange={(event) => optionChange(i - 1, event.target.value)}
+            disabled={!accountState.isCoreAccount}
           />
-          {counter === i && counter > MIN_OPTIONS && (
+          {counter === i && counter > MIN_OPTIONS && accountState.isCoreAccount && (
             <IconButton onClick={decrementCounter} className={classes.actions}>
               <RemoveCircleIcon color="inherit" style={{ color: COLOR_RED }} />
             </IconButton>
           )}
-          {counter === i && counter < MAX_OPTIONS && (
+          {counter === i && counter < MAX_OPTIONS && accountState.isCoreAccount && (
             <IconButton onClick={incrementCounter} className={classes.actions}>
               <AddCircleIcon />
             </IconButton>
