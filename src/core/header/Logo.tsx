@@ -1,22 +1,30 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import {makeStyles, Theme} from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     cursor: 'pointer',
     textDecoration: 'none',
   },
   logoWrapper: {
-    height: '46px',
-    width: '128px',
+    height: '56px',
+    width: '140px',
+    [theme.breakpoints.down('sm')]: {
+      height: '41px',
+      width: '115px',
+    },
   },
   image: {
     marginTop: '15px',
     height: '56px',
     width: '140px',
+    [theme.breakpoints.down('sm')]: {
+      height: '41px',
+      width: '115px',
+    },
   },
-});
+}));
 
 const Logo: React.FunctionComponent = () => {
   const classes = useStyles();

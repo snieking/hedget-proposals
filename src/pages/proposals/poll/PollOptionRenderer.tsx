@@ -22,7 +22,7 @@ const useStyles = makeStyles({
   outerWrapper: {
     marginBottom: '15px',
     padding: '10px',
-    backgroundColor: '#F5F5F5',
+    borderColor: '#F5F5F5',
   },
   clickable: {
     cursor: 'pointer',

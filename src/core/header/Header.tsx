@@ -1,12 +1,23 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+import {Grid, makeStyles} from '@material-ui/core';
 import NavigationIcons from './NavigationIcons';
 import Logo from './Logo';
 
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    margin: '0 auto',
+    [theme.breakpoints.up('md')]: {
+      width: '80%',
+    },
+  },
+}));
+
 const Header: React.FunctionComponent<unknown> = () => {
+  const classes = useStyles();
+
   return (
     <>
-      <Grid container alignContent="center" style={{ width: '80%', margin: '0 auto' }}>
+      <Grid container alignContent="center" className={classes.wrapper}>
         <Grid item xs={8}>
           <Logo />
         </Grid>

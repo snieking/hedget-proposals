@@ -27,6 +27,8 @@ interface Props {
 const useStyles = makeStyles({
   wrapper: {
     margin: '0 auto',
+    marginLeft: '20px',
+    marginRight: '20px',
   },
 });
 

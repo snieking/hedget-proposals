@@ -81,6 +81,7 @@ const useStyles = makeStyles({
   },
   description: {
     whiteSpace: 'pre-wrap',
+    marginBottom: '15px',
   },
 });
 
@@ -179,12 +180,12 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
       <Details />
       <SectionDivider />
       <Grid container spacing={2}>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={8}>
           <Typography variant="body1" component="p" className={classes.description}>
             {proposal.description}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={4}>
           <Poll proposalId={proposal.id} />
         </Grid>
       </Grid>
