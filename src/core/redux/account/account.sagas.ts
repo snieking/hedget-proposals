@@ -10,7 +10,7 @@ const getAccountState = (state: ApplicationState) => state.account;
 function* checkCoreAccountSaga() {
   const accountState = yield select(getAccountState);
 
-  if (accountState && accountState.accountDetail) {
+  if (accountState && accountState.accountDetail && accountState.accountDetail.validUntil > Date.now() / 1000) {
     const isCore = yield isCoreAccount(accountState.accountDetail);
     yield put(setCoreAccount(isCore));
   }

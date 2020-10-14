@@ -6,7 +6,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
@@ -23,6 +23,8 @@ import { formatedAuthor } from './util';
 import TimeRemainingDetail from './TimeRemainingDetail';
 import SectionDivider from '../../shared/SectionDivider';
 import Poll from './poll/Poll';
+import ConfirmDialog from '../../shared/ConfirmDialog';
+import { snackbarActions } from '../../core/redux/snackbar/snackbar-actions';
 
 interface MatchParams {
   id: string;
@@ -91,7 +93,9 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
   const [proposal, setProposal] = useState<Proposal>();
   const [pollOptions, setPollOptions] = useState<PollOption[]>();
   const [optionVote, setOptionVote] = useState<string>();
+  const [proposalDeletionDialogOpen, setProposalDeletionDialogOpen] = useState(false);
   const accountState = useSelector((state: ApplicationState) => state.account);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (props.match.params.id) {
@@ -107,6 +111,17 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
   }, [optionVote, pollOptions, accountState, props]);
 
   if (!proposal || !pollOptions) return null;
+
+  const closeProposalDeletionDialog = () => setProposalDeletionDialogOpen(false);
+
+  const triggerProposalDeletion = () => {
+    closeProposalDeletionDialog();
+    deleteProposal(accountState, proposal.id)
+      .then(() => {
+        window.location.href = window.location.origin;
+      })
+      .catch((error: Error) => dispatch(snackbarActions.notifyError(error.message)));
+  };
 
   const Details: React.FunctionComponent = () => {
     return (
@@ -146,14 +161,16 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
               <Button
                 variant="contained"
                 className={classes.deleteBtn}
-                onClick={() =>
-                  deleteProposal(accountState, proposal.id).then(() => {
-                    window.location.href = window.location.origin;
-                  })
-                }
+                onClick={() => setProposalDeletionDialogOpen(true)}
               >
                 <DeleteForeverIcon />
               </Button>
+              <ConfirmDialog
+                text={`This action will delete the proposal (${proposal.id}) and you won't be able to undo it.`}
+                open={proposalDeletionDialogOpen}
+                onClose={closeProposalDeletionDialog}
+                onConfirm={triggerProposalDeletion}
+              />
             </div>
           )}
         </div>
