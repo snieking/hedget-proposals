@@ -10,7 +10,11 @@ import { PollOption } from '../../../core/services/proposals.model';
 import ApplicationState from '../../../core/redux/application-state';
 import PollOptionRenderer from './PollOptionRenderer';
 import { notifyError, notifySuccess } from '../../../core/redux/snackbar/snackbar-actions';
-import { COLOR_HEDGET_GREEN, COLOR_YELLOW } from '../../../core/dynamic-theme/DefaultTheme';
+import {
+  COLOR_GRAY,
+  COLOR_HEDGET_GREEN,
+  COLOR_YELLOW
+} from '../../../core/dynamic-theme/DefaultTheme';
 
 interface Props {
   proposalId: string;
@@ -22,6 +26,7 @@ const useStyles = makeStyles({
   voteStatus: {
     marginBottom: '20px',
     fontWeight: 'bold',
+    color: COLOR_GRAY,
   },
 });
 
@@ -85,7 +90,7 @@ const Poll: React.FunctionComponent<Props> = (props) => {
   return (
     <div>
       {getVoteStatusText() && (
-        <Typography variant="body1" component="p" className={classes.voteStatus}>
+        <Typography variant="subtitle1" component="p" className={classes.voteStatus}>
           {getVoteStatusText()}
         </Typography>
       )}

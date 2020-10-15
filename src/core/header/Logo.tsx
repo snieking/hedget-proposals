@@ -31,7 +31,12 @@ const Logo: React.FunctionComponent = () => {
 
   return (
     <div className={classes.logoWrapper}>
-      <RouterLink to="/">
+      <RouterLink
+        to="#"
+        onClick={() => {
+          window.location.href = 'https://hedget.com';
+        }}
+      >
         <img src="https://hedget.com/images/logo.png" alt="Hedget logo" className={classes.image} />
       </RouterLink>
     </div>
