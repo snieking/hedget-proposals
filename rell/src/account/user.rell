@@ -128,6 +128,6 @@ query amount_staked (id: byte_array): integer {
 	return eth_account_state @{ eth_account @{ .account.id == id }} ( .staked_amount );
 }
 
-query amount_staked_by_eth_addr (eth_addr: text): integer {
-	return eth_account_state @{ eth_account @{ .address == eth_addr }} ( .staked_amount );
+query stake_by_eth_addr (eth_addr: text) {
+	return eth_account_state @{ eth_account @{ .address == eth_addr }} ( .staked_amount, .valid_until );
 }

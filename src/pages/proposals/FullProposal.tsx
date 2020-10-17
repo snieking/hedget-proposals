@@ -7,7 +7,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
 import {
@@ -132,16 +132,11 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
         <div className={classes.iconDetailsWrapper}>
           <div className={classes.stats}>
             <PersonIcon className={classes.statsIcon} />
-            <a
-              href={`https://etherscan.io/address/${proposal.author}`}
-              className={classes.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link to={`/account/${proposal.author}`} className={classes.link}>
               <Typography variant="body2" component="span" className={classes.iconText}>
                 {formatedAuthor(proposal.author)}
               </Typography>
-            </a>
+            </Link>
           </div>
           <div className={classes.stats}>
             <CategoryIcon className={classes.statsIcon} />

@@ -17,3 +17,10 @@ export interface PollOption {
   text: string;
   votes: number;
 }
+
+export interface PollParticipation {
+  id: string;
+  title: string;
+  option: string;
+  amount: string;
+}

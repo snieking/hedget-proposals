@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router';
 import { makeStyles, Theme } from '@material-ui/core';
 import AppProposals from './pages/proposals/overview/AppProposals';
 import FullProposal from './pages/proposals/FullProposal';
+import Account from './pages/account/Account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -22,6 +23,7 @@ const Content: React.FunctionComponent = () => {
       <Switch>
         <Route exact path="/" component={AppProposals} />
         <Route path="/proposal/:id" component={FullProposal} />
+        <Route path="/account/:address" component={Account} />
       </Switch>
     </div>
   );

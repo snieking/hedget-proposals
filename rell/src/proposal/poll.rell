@@ -54,3 +54,12 @@ query get_poll_vote (id: name, account_id: byte_array) {
 query get_poll_vote_by_eth_addr (id: name, eth_addr: text) {
 	return poll_vote @? { .poll.proposal.id == id, account.eth_account @ { .address == eth_addr } } ( .poll_option.text );
 }
+
+query get_poll_participations_by_eth_addr (eth_addr: text) {
+	return poll_vote @* { account.eth_account @ { .address == eth_addr } } ( 
+		.poll.proposal.id, 
+		.poll.proposal.title, 
+		option = .poll_option.text, 
+		.amount
+	);
+}
