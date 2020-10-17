@@ -58,13 +58,9 @@ operation delete_proposal (account_id: byte_array, auth_descriptor_id: byte_arra
 	
 	val proposal = proposal @ { .id == id };	
 	val poll = poll @ { proposal };
-	val options = poll_option @* { poll };
 	
-	for (option in options) {
-		delete option;
-	}
-	
-	delete options;
+	delete poll_vote @* { poll };
+	delete poll_option @* { poll };	
 	delete poll;
 	delete proposal;
 }
