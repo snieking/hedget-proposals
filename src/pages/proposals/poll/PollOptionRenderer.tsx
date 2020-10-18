@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     width: 400,
     maxWidth: '90%',
-    border: '2px solid',
+    border: '1px solid',
     borderColor: COLOR_HEDGET_GREEN,
     background: theme.palette.background.paper,
     outline: 'none',
