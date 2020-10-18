@@ -64,7 +64,7 @@ const Poll: React.FunctionComponent<Props> = (props) => {
       .then(() => {
         getProposalPollOptions(props.proposalId).then((o) => setPollOptions(o));
         setOptionVote(text);
-        props.notifySuccess('Vote Casted');
+        props.notifySuccess('Successfully voted');
       })
       .catch((error) => props.notifyError(error?.message));
   }

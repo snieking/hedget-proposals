@@ -111,6 +111,7 @@ const AppProposals: React.FunctionComponent = () => {
         <Button
           variant={includeCore && includeCommunity ? 'contained' : 'outlined'}
           color="primary"
+          size="small"
           className={classes.filterButton}
           onClick={() => {
             setIncludeCore(true);
@@ -122,6 +123,7 @@ const AppProposals: React.FunctionComponent = () => {
         <Button
           variant={includeCore && !includeCommunity ? 'contained' : 'outlined'}
           color="primary"
+          size="small"
           className={classes.filterButton}
           onClick={() => {
             setIncludeCore(true);
@@ -133,6 +135,7 @@ const AppProposals: React.FunctionComponent = () => {
         <Button
           variant={!includeCore && includeCommunity ? 'contained' : 'outlined'}
           color="primary"
+          size="small"
           className={classes.filterButton}
           onClick={() => {
             setIncludeCommunity(true);
@@ -154,6 +157,7 @@ const AppProposals: React.FunctionComponent = () => {
         <Button
           variant={includeInProgress && includeCompleted ? 'contained' : 'outlined'}
           color="primary"
+          size="small"
           className={classes.filterButton}
           onClick={() => {
             setIncludeInProgress(true);
@@ -165,6 +169,7 @@ const AppProposals: React.FunctionComponent = () => {
         <Button
           variant={includeInProgress && !includeCompleted ? 'contained' : 'outlined'}
           color="primary"
+          size="small"
           className={classes.filterButton}
           onClick={() => {
             setIncludeInProgress(true);
@@ -176,6 +181,7 @@ const AppProposals: React.FunctionComponent = () => {
         <Button
           variant={!includeInProgress && includeCompleted ? 'contained' : 'outlined'}
           color="primary"
+          size="small"
           className={classes.filterButton}
           onClick={() => {
             setIncludeCompleted(true);
