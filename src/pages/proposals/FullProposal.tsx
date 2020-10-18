@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import BackspaceIcon from '@material-ui/icons/Backspace';
 import PersonIcon from '@material-ui/icons/Person';
 import CategoryIcon from '@material-ui/icons/Category';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { RouteComponentProps } from 'react-router';
 import { Typography, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { Proposal, PollOption } from '../../core/services/proposals.model';
 import {
@@ -18,36 +17,21 @@ import {
 } from '../../core/services/proposals.service';
 import StatusChip from '../../shared/StatusChip';
 import ApplicationState from '../../core/redux/application-state';
-import { COLOR_DARKER_GREEN, COLOR_GRAY, COLOR_RED } from '../../core/dynamic-theme/DefaultTheme';
+import { COLOR_GRAY, COLOR_RED } from '../../core/dynamic-theme/DefaultTheme';
 import { formatedAuthor } from './util';
 import TimeRemainingDetail from './TimeRemainingDetail';
 import SectionDivider from '../../shared/SectionDivider';
 import Poll from './poll/Poll';
 import ConfirmDialog from '../../shared/ConfirmDialog';
 import { snackbarActions } from '../../core/redux/snackbar/snackbar-actions';
+import BackToProposals from '../../shared/BackToProposals';
 
 interface MatchParams {
   id: string;
 }
 const useStyles = makeStyles({
-  returnWrapper: {
-    position: 'relative',
-    top: -10,
-    cursor: 'pointer',
-  },
   link: {
     textDecoration: 'none',
-  },
-  returnText: {
-    color: COLOR_DARKER_GREEN,
-    fontWeight: 'bold',
-    position: 'relative',
-    top: -5,
-    textDecoration: 'none',
-    marginLeft: '5px',
-  },
-  returnIcon: {
-    color: COLOR_DARKER_GREEN,
   },
   stats: {
     display: 'inline',
@@ -175,14 +159,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
 
   return (
     <div>
-      <div className={classes.returnWrapper}>
-        <RouterLink to="/" className={classes.link}>
-          <BackspaceIcon fontSize="small" className={classes.returnIcon} />
-          <Typography variant="body2" component="span" className={classes.returnText}>
-            Back to proposals
-          </Typography>
-        </RouterLink>
-      </div>
+      <BackToProposals />
       <Typography variant="h6" component="span" className={classes.title}>
         <Typography variant="h6" component="span" className={classes.titleId}>
           {proposal.id}

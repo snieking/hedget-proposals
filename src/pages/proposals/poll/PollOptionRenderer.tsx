@@ -106,6 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: '2px solid',
     borderColor: COLOR_HEDGET_GREEN,
     background: theme.palette.background.paper,
+    outline: 'none',
   },
   link: {
     textDecoration: 'none',

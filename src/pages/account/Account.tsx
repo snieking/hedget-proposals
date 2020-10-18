@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { PollParticipation, ProposalOverview } from '../../core/services/proposals.model';
 import { getPollParticipationsByAddress, getProposalsByAddress } from '../../core/services/proposals.service';
+import BackToProposals from '../../shared/BackToProposals';
 
 interface MatchParams {
   address: string;
@@ -20,6 +21,7 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
 
   return (
     <>
+      <BackToProposals />
       {proposals.map((p) => (
         <p key={p.id}>{JSON.stringify(p)}</p>
       ))}
