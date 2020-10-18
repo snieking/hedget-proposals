@@ -1,24 +1,53 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { makeStyles, MuiThemeProvider } from '@material-ui/core';
+import { makeStyles, MuiThemeProvider, Theme } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import ApplicationState from '../../../core/redux/application-state';
-import { PollOption } from '../../../core/services/proposals.model';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import IconButton from '@material-ui/core/IconButton';
+import Modal from '@material-ui/core/Modal';
+import TableContainer from '@material-ui/core/TableContainer';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import { Link } from 'react-router-dom';
+import { getPollOptionVoterDetails } from '../../../core/services/proposals.service';
+import {
+  COLOR_CHROMIA_DARK,
+  COLOR_GRAY,
+  COLOR_HEDGET_GREEN
+} from '../../../core/dynamic-theme/DefaultTheme';
 import ConfirmDialog from '../../../shared/ConfirmDialog';
-import { COLOR_GRAY } from '../../../core/dynamic-theme/DefaultTheme';
+import { PollOption, VoterDetails } from '../../../core/services/proposals.model';
+import ApplicationState from '../../../core/redux/application-state';
+import { formatedAuthor } from '../util';
 
 interface Props {
+  id: string;
   voteFor: () => void;
   pollOption: PollOption;
   votedFor: string;
   total: number;
   color: string;
+  inProgress: boolean;
 }
 
-const useStyles = makeStyles({
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+const useStyles = makeStyles((theme: Theme) => ({
   outerWrapper: {
     marginBottom: '15px',
     padding: '10px',
@@ -26,6 +55,11 @@ const useStyles = makeStyles({
   },
   clickable: {
     cursor: 'pointer',
+  },
+  infoBtn: {
+    float: 'right',
+    zIndex: 10,
+    fontSize: '18px',
   },
   percentage: {
     display: 'inline',
@@ -65,11 +99,26 @@ const useStyles = makeStyles({
     borderRadius: '5px',
     borderLeft: 'solid 3px',
   },
-});
+  modalWrapper: {
+    position: 'absolute',
+    width: 400,
+    maxWidth: '90%',
+    border: '2px solid',
+    borderColor: COLOR_HEDGET_GREEN,
+    background: theme.palette.background.paper,
+  },
+  link: {
+    textDecoration: 'none',
+    color: COLOR_CHROMIA_DARK,
+  },
+}));
 
 const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
+  const [modalStyle] = React.useState(getModalStyle);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [voterDetailsOpen, setVoterDetailsOpen] = useState(false);
+  const [voterDetails, setVoterDetails] = useState<VoterDetails[]>([]);
 
   const accountState = useSelector((state: ApplicationState) => state.account);
 
@@ -85,6 +134,14 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
     }
   };
 
+  const openVoterDetails = (): void => {
+    if (voterDetails.length < 1) {
+      getPollOptionVoterDetails(props.id, props.pollOption.text).then((details) => setVoterDetails(details));
+    }
+
+    setVoterDetailsOpen(true);
+  };
+
   const percent = (): number =>
     props.pollOption.votes !== 0 ? Math.round((props.pollOption.votes / props.total) * 100) : 0;
 
@@ -98,6 +155,44 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
     });
   };
 
+  const VoterDetailsModal: React.FunctionComponent = () => {
+    return (
+      <Modal
+        open={voterDetailsOpen}
+        onClose={() => setVoterDetailsOpen(false)}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div style={modalStyle} className={classes.modalWrapper}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Account</TableCell>
+                  <TableCell align="right">Amount (HGET)</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {voterDetails.map((details) => (
+                  <TableRow key={details.address}>
+                    <TableCell>
+                      <Link to={`/account/${details.address}`} className={classes.link}>
+                        {formatedAuthor(details.address)}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="right">{details.amount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      </Modal>
+    );
+  };
+
+  const eligibleToVote = (): boolean => hasStaked() && !props.votedFor && props.inProgress;
+
   return (
     <>
       <Box
@@ -107,9 +202,14 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
         ${classes.outerWrapper}
        `}
         style={{ borderLeftColor: props.color }}
-        onClick={() => hasStaked() && !props.votedFor && setConfirmDialogOpen(true)}
+        onClick={() => eligibleToVote() && setConfirmDialogOpen(true)}
       >
         <div className={classes.optionWrapper}>
+          {!eligibleToVote() && (
+            <IconButton size="small" className={classes.infoBtn} onClick={openVoterDetails}>
+              <ThumbUpIcon fontSize="inherit" />
+            </IconButton>
+          )}
           <Typography variant="body1" component="p" className={classes.upperText}>
             {props.pollOption.text}
           </Typography>
@@ -117,7 +217,7 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
             <LinearProgress
               color="primary"
               classes={{ colorPrimary: props.color, barColorPrimary: props.color }}
-              variant="buffer"
+              variant="determinate"
               value={percent()}
               className={classes.pollBar}
             />
@@ -133,6 +233,7 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
         onClose={close}
         onConfirm={vote}
       />
+      <VoterDetailsModal />
     </>
   );
 };

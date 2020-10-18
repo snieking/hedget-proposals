@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-import { ProposalOverview, Proposal, PollOption, PollParticipation } from './proposals.model';
+import {
+  ProposalOverview,
+  Proposal,
+  PollOption,
+  PollParticipation, VoterDetails
+} from './proposals.model';
 import { Transaction } from '../blockchain/Transaction';
 import { Operation } from '../blockchain/Operation';
 import { addAuthToOperation, query } from '../blockchain/blockchain-helper';
@@ -68,6 +73,10 @@ export function getProposalsByAddress(address: string, afterTimestamp: number): 
 
 export function getPollParticipationsByAddress(address: string): Promise<PollParticipation[]> {
   return query('get_poll_participations_by_eth_addr', { eth_addr: address });
+}
+
+export function getPollOptionVoterDetails(id: string, option: string): Promise<VoterDetails[]> {
+  return query('get_vote_details_of_specific_option', { id, option });
 }
 
 export async function voteForOptionInPoll(accountState: AccountState, id: string, option: string) {

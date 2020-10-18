@@ -24,3 +24,8 @@ export interface PollParticipation {
   option: string;
   amount: string;
 }
+
+export interface VoterDetails {
+  address: string;
+  amount: number;
+}

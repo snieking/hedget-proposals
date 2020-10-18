@@ -14,6 +14,7 @@ import { COLOR_GRAY, COLOR_HEDGET_GREEN, COLOR_YELLOW } from '../../../core/dyna
 
 interface Props {
   proposalId: string;
+  inProgress: boolean;
   notifyError: typeof notifyError;
   notifySuccess: typeof notifySuccess;
 }
@@ -93,11 +94,13 @@ const Poll: React.FunctionComponent<Props> = (props) => {
       {pollOptions.map((po) => (
         <PollOptionRenderer
           key={po.text}
+          id={props.proposalId}
           voteFor={() => voteForOption(po.text)}
           pollOption={po}
           votedFor={optionVote}
           total={pollOptions.map((p) => p.votes).reduce((a, b) => a + b, 0)}
           color={getOptionColor(pollOptions.indexOf(po))}
+          inProgress={props.inProgress}
         />
       ))}
     </div>

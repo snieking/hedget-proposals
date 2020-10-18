@@ -13,7 +13,6 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
 
   useEffect(() => {
     if (props.match.params.address) {
-      console.log(props.match.params.address);
       getProposalsByAddress(props.match.params.address, 0).then((p) => setProposals(p));
       getPollParticipationsByAddress(props.match.params.address).then((p) => setPollParticipations(p));
     }

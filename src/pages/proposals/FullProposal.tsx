@@ -198,7 +198,7 @@ const FullProposal: React.FunctionComponent<RouteComponentProps<MatchParams>> = 
           </Typography>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Poll proposalId={proposal.id} />
+          <Poll proposalId={proposal.id} inProgress={proposal.endTimestamp > Date.now()} />
         </Grid>
       </Grid>
     </div>
