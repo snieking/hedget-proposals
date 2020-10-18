@@ -4,12 +4,11 @@ import { connect, Provider } from 'react-redux';
 import { CssBaseline, makeStyles } from '@material-ui/core';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Store } from 'redux';
-// import ReactPiwik from 'react-piwik';
+import { MatomoProvider, createInstance } from '@datapunt/matomo-tracker-react';
 import DynamicTheme from './core/dynamic-theme/DynamicTheme';
 import Header from './core/header/Header';
 import Spinners from './core/spinners/Spinners';
 import config from './config';
-// import history from './history';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
 import { AccountDetail } from './core/redux/account/account.state';
@@ -32,15 +31,23 @@ const useStyles = makeStyles({
   },
 });
 
-// const piwik = config.matomo.enabled
-//   ? new ReactPiwik({
-//       url: config.matomo.url,
-//       siteId: config.matomo.siteId,
-//       trackErrors: config.matomo.trackErrors,
-//       jsFilename: config.matomo.jsFileName,
-//       phpFilename: config.matomo.phpFilename,
-//     })
-//   : null;
+const instance = createInstance({
+  disabled: config.matomo.enabled,
+  urlBase: config.matomo.url,
+  siteId: config.matomo.siteId,
+  // trackerUrl: `${config.matomo.url}/${config.matomo.phpFilename}`,
+  // srcUrl: `${config.matomo.url}/${config.matomo.jsFileName}`,
+  heartBeat: {
+    active: true,
+    seconds: 10,
+  },
+  linkTracking: true,
+  configurations: {
+    disableCookies: false,
+    setSecureCookie: false,
+    setRequestMethod: 'POST',
+  },
+});
 
 initLogger();
 
@@ -55,19 +62,21 @@ const App: React.FunctionComponent<Props> = (props) => {
   }, [props]);
 
   return (
-    <Provider store={props.store}>
-      <DynamicTheme>
-        <CssBaseline />
-        <Router basename={config.baseUrl}>
-          <div className={classes.wrapper}>
-            <Header />
-            <Spinners />
-            <Content />
-            <SnackbarHolder />
-          </div>
-        </Router>
-      </DynamicTheme>
-    </Provider>
+    <MatomoProvider value={instance}>
+      <Provider store={props.store}>
+        <DynamicTheme>
+          <CssBaseline />
+          <Router basename={config.baseUrl}>
+            <div className={classes.wrapper}>
+              <Header />
+              <Spinners />
+              <Content />
+              <SnackbarHolder />
+            </div>
+          </Router>
+        </DynamicTheme>
+      </Provider>
+    </MatomoProvider>
   );
 };
 

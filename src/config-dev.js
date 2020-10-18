@@ -13,13 +13,8 @@ module.exports = {
     url: 'http://35.205.218.13:8080',
   },
   matomo: {
-    enabled: false,
+    enabled: true,
     url: 'https://matomo.chromia.dev/',
-    siteId: 3,
-    trackErrors: true,
-    jsFileName: 'js/',
-    phpFilename: 'js/',
+    siteId: 7,
   },
-  features: {},
-  test: true,
 };

@@ -11,6 +11,7 @@ import ApplicationState from '../../../core/redux/application-state';
 import PollOptionRenderer from './PollOptionRenderer';
 import { notifyError, notifySuccess } from '../../../core/redux/snackbar/snackbar-actions';
 import { COLOR_GRAY, COLOR_HEDGET_GREEN, COLOR_YELLOW } from '../../../core/dynamic-theme/DefaultTheme';
+import {useMatomo} from "@datapunt/matomo-tracker-react/lib";
 
 interface Props {
   proposalId: string;
@@ -29,6 +30,7 @@ const useStyles = makeStyles({
 
 const Poll: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
+  const { trackEvent } = useMatomo();
   const [pollOptions, setPollOptions] = useState<PollOption[]>([]);
   const [optionVote, setOptionVote] = useState<string>();
   const accountState = useSelector((state: ApplicationState) => state.account);
@@ -65,6 +67,12 @@ const Poll: React.FunctionComponent<Props> = (props) => {
         getProposalPollOptions(props.proposalId).then((o) => setPollOptions(o));
         setOptionVote(text);
         props.notifySuccess('Successfully voted');
+        trackEvent({
+          category: 'poll',
+          action: `${props.proposalId} > vote`,
+          name: text,
+          value: accountState.amountStaked,
+        });
       })
       .catch((error) => props.notifyError(error?.message));
   }
