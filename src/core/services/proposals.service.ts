@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-import {
-  ProposalOverview,
-  Proposal,
-  PollOption,
-  PollParticipation, VoterDetails
-} from './proposals.model';
+import { ProposalOverview, Proposal, PollOption, PollParticipation, VoterDetails } from './proposals.model';
 import { Transaction } from '../blockchain/Transaction';
 import { Operation } from '../blockchain/Operation';
 import { addAuthToOperation, query } from '../blockchain/blockchain-helper';

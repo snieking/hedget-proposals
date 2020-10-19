@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { makeStyles, Typography } from '@material-ui/core';
+import { useMatomo } from '@datapunt/matomo-tracker-react/lib';
 import {
   getProposalPollOptions,
   getProposalPollVote,
@@ -11,7 +12,6 @@ import ApplicationState from '../../../core/redux/application-state';
 import PollOptionRenderer from './PollOptionRenderer';
 import { notifyError, notifySuccess } from '../../../core/redux/snackbar/snackbar-actions';
 import { COLOR_GRAY, COLOR_HEDGET_GREEN, COLOR_YELLOW } from '../../../core/dynamic-theme/DefaultTheme';
-import {useMatomo} from "@datapunt/matomo-tracker-react/lib";
 
 interface Props {
   proposalId: string;

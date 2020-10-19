@@ -16,11 +16,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Link } from 'react-router-dom';
 import { getPollOptionVoterDetails } from '../../../core/services/proposals.service';
-import {
-  COLOR_CHROMIA_DARK,
-  COLOR_GRAY,
-  COLOR_HEDGET_GREEN
-} from '../../../core/dynamic-theme/DefaultTheme';
+import { COLOR_CHROMIA_DARK, COLOR_GRAY, COLOR_HEDGET_GREEN } from '../../../core/dynamic-theme/DefaultTheme';
 import ConfirmDialog from '../../../shared/ConfirmDialog';
 import { PollOption, VoterDetails } from '../../../core/services/proposals.model';
 import ApplicationState from '../../../core/redux/application-state';
