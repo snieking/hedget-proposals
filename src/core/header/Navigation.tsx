@@ -1,9 +1,11 @@
 import React from 'react';
-import { IconButton, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import { AccountCircle } from '@material-ui/icons';
 import About from './About';
 import Stake from '../../shared/Stake';
+import NavText from './NavText';
+import NavItem from './NavItem';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -18,9 +20,17 @@ const useStyles = makeStyles((theme) => ({
       height: '32px',
     },
   },
+  navItem: {
+    display: 'inline',
+  },
+  navIcon: {
+    position: 'relative',
+    top: '10px',
+    marginRight: '5px',
+  },
 }));
 
-const NavigationIcons: React.FunctionComponent = () => {
+const Navigation: React.FunctionComponent = () => {
   const classes = useStyles();
 
   const [infoOpen, setInfoOpen] = React.useState(false);
@@ -36,16 +46,18 @@ const NavigationIcons: React.FunctionComponent = () => {
 
   return (
     <div className={classes.wrapper}>
-      <IconButton onClick={toggleOpenInfo}>
-        <InfoIcon className={classes.icon} />
-      </IconButton>
+      <NavItem onClick={() => setLoginOpen(true)}>
+        <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
+        <NavText message="Your Account" />
+      </NavItem>
+      <NavItem onClick={toggleOpenInfo}>
+        <InfoIcon color="primary" className={`${classes.icon} ${classes.navIcon}`} />
+        <NavText message="Service Info" />
+      </NavItem>
       <About open={infoOpen} onClose={handleCloseInfo} />
-      <IconButton onClick={() => setLoginOpen(true)}>
-        <AccountCircle className={classes.icon} />
-      </IconButton>
       <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   );
 };
 
-export default NavigationIcons;
+export default Navigation;

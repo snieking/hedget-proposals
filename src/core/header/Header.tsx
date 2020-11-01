@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, makeStyles } from '@material-ui/core';
-import NavigationIcons from './NavigationIcons';
+import Navigation from './Navigation';
 import Logo from './Logo';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +22,7 @@ const Header: React.FunctionComponent<unknown> = () => {
           <Logo />
         </Grid>
         <Grid item xs={4}>
-          <NavigationIcons />
+          <Navigation />
         </Grid>
       </Grid>
     </>

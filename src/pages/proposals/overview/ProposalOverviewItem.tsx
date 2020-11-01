@@ -15,6 +15,7 @@ import TimeRemainingDetail from '../TimeRemainingDetail';
 
 interface Props {
   proposal: ProposalOverview;
+  hideDetails?: boolean;
 }
 
 const useStyles = makeStyles({
@@ -62,18 +63,22 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
         </Typography>
         <div className={classes.detailsWrapper}>
           <StatusChip status={props.proposal.status} className={classes.chip} />
-          <div className={classes.detail}>
-            <CategoryIcon />
-            <Typography variant="body2" component="span" className={classes.iconText}>
-              {props.proposal.category}
-            </Typography>
-          </div>
-          <div className={classes.detail}>
-            <PersonIcon />
-            <Typography variant="body2" component="span" className={classes.iconText}>
-              {formatedAuthor(props.proposal.author)}
-            </Typography>
-          </div>
+          {!props.hideDetails && (
+            <div className={classes.detail}>
+              <CategoryIcon />
+              <Typography variant="body2" component="span" className={classes.iconText}>
+                {props.proposal.category}
+              </Typography>
+            </div>
+          )}
+          {!props.hideDetails && (
+            <div className={classes.detail}>
+              <PersonIcon />
+              <Typography variant="body2" component="span" className={classes.iconText}>
+                {formatedAuthor(props.proposal.author)}
+              </Typography>
+            </div>
+          )}
           <div className={classes.detail}>
             <TimeRemainingDetail endTimestamp={props.proposal.endTimestamp} iconTextClassName={classes.iconText} />
           </div>

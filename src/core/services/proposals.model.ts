@@ -23,6 +23,8 @@ export interface PollParticipation {
   title: string;
   option: string;
   amount: string;
+  endTimestamp: number;
+  status: string;
 }
 
 export interface VoterDetails {

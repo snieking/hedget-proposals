@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import GroupIcon from '@material-ui/icons/Group';
 import IconButton from '@material-ui/core/IconButton';
 import Modal from '@material-ui/core/Modal';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -204,7 +204,7 @@ const PollOptionRenderer: React.FunctionComponent<Props> = (props) => {
         <div className={classes.optionWrapper}>
           {!eligibleToVote() && (
             <IconButton size="small" className={classes.infoBtn} onClick={openVoterDetails}>
-              <ThumbUpIcon fontSize="inherit" />
+              <GroupIcon fontSize="inherit" />
             </IconButton>
           )}
           <Typography variant="body1" component="p" className={classes.upperText}>

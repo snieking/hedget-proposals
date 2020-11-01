@@ -65,9 +65,10 @@ query get_poll_vote_by_eth_addr (id: name, eth_addr: text) {
 
 query get_poll_participations_by_eth_addr (eth_addr: text) {
 	return poll_vote @* { account.eth_account @ { .address == eth_addr } } ( 
-		.poll.proposal.id, 
-		.poll.proposal.title, 
+		id = .poll.proposal.id, 
+		title = .poll.proposal.title, 
 		option = .poll_option.text, 
-		.amount
+		amount = .amount,
+		endTimestamp = .poll.proposal.endTimestamp
 	);
 }

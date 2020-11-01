@@ -6,10 +6,21 @@ import { Operation } from '../blockchain/Operation';
 import { addAuthToOperation, query } from '../blockchain/blockchain-helper';
 import { AccountState } from '../redux/account/account.state';
 
+function convertToStatus(timestamp: number): string {
+  return timestamp > Date.now() ? 'In Progress' : 'Completed';
+}
+
 function addStatus<T extends ProposalOverview>(proposal: T): T {
   return {
     ...proposal,
-    status: proposal.endTimestamp > Date.now() ? 'In Progress' : 'Completed',
+    status: convertToStatus(proposal.endTimestamp),
+  };
+}
+
+function addStatusForParticipation(participation: PollParticipation): PollParticipation {
+  return {
+    ...participation,
+    status: convertToStatus(participation.endTimestamp),
   };
 }
 
@@ -67,7 +78,9 @@ export function getProposalsByAddress(address: string, afterTimestamp: number): 
 }
 
 export function getPollParticipationsByAddress(address: string): Promise<PollParticipation[]> {
-  return query('get_poll_participations_by_eth_addr', { eth_addr: address });
+  return query('get_poll_participations_by_eth_addr', {
+    eth_addr: address,
+  }).then((participations: PollParticipation[]) => participations.map((p) => addStatusForParticipation(p)));
 }
 
 export function getPollOptionVoterDetails(id: string, option: string): Promise<VoterDetails[]> {
