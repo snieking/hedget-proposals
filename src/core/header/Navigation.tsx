@@ -2,10 +2,12 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import { AccountCircle } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
 import About from './About';
 import Stake from '../../shared/Stake';
 import NavText from './NavText';
 import NavItem from './NavItem';
+import ApplicationState from '../redux/application-state';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -32,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Navigation: React.FunctionComponent = () => {
   const classes = useStyles();
+  const accountState = useSelector((state: ApplicationState) => state.account);
+
 
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [loginOpen, setLoginOpen] = React.useState(false);
@@ -46,13 +50,13 @@ const Navigation: React.FunctionComponent = () => {
 
   return (
     <div className={classes.wrapper}>
-      <NavItem onClick={() => setLoginOpen(true)}>
-        <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
-        <NavText message="Your Account" />
-      </NavItem>
       <NavItem onClick={toggleOpenInfo}>
         <InfoIcon color="primary" className={`${classes.icon} ${classes.navIcon}`} />
         <NavText message="Service Info" />
+      </NavItem>
+      <NavItem onClick={() => setLoginOpen(true)}>
+        <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
+        <NavText message={accountState.isChecked && !accountState.accountDetail ? 'Login' : 'Your Account'} />
       </NavItem>
       <About open={infoOpen} onClose={handleCloseInfo} />
       <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />

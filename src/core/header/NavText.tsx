@@ -1,6 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core';
+import Hidden from '@material-ui/core/Hidden';
 import { COLOR_GRAY } from '../dynamic-theme/DefaultTheme';
 
 interface Props {
@@ -18,9 +19,11 @@ const useStyles = makeStyles({
 const NavText: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
   return (
-    <Typography variant="body1" component="span" className={classes.text}>
-      {props.message}
-    </Typography>
+    <Hidden smDown>
+      <Typography variant="body1" component="span" className={classes.text}>
+        {props.message}
+      </Typography>
+    </Hidden>
   );
 };
 
