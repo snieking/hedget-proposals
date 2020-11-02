@@ -36,7 +36,6 @@ const Navigation: React.FunctionComponent = () => {
   const classes = useStyles();
   const accountState = useSelector((state: ApplicationState) => state.account);
 
-
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [loginOpen, setLoginOpen] = React.useState(false);
 
