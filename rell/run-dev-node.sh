@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 set -e
 
-if [[ $1 == "WIPE_DB" ]]; then 
+if [[ $1 == "WIPE_DB" ]]; then
 	echo "Deleting the database..."
 	postchain-node/postchain.sh wipe-db -nc target/node-config.properties
 	./build.sh

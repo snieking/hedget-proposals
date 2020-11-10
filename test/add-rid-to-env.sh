@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 RID=$(docker exec -i hedget_proposals cat rell/target/blockchains/1/brid.txt)
 
