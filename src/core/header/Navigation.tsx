@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import { AccountCircle } from '@material-ui/icons';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import About from './About';
 import Stake from '../../shared/Stake';
 import NavText from './NavText';
@@ -36,7 +37,6 @@ const Navigation: React.FunctionComponent = () => {
   const classes = useStyles();
   const accountState = useSelector((state: ApplicationState) => state.account);
 
-
   const [infoOpen, setInfoOpen] = React.useState(false);
   const [loginOpen, setLoginOpen] = React.useState(false);
 
@@ -48,18 +48,35 @@ const Navigation: React.FunctionComponent = () => {
     setInfoOpen(false);
   };
 
+  function renderAccountNavigation() {
+    if (accountState.isChecked && !accountState.accountDetail) {
+      return (
+        <>
+          <NavItem onClick={() => setLoginOpen(true)}>
+            <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
+            <NavText message="Login" />
+          </NavItem>
+          <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />
+        </>
+      );
+    }
+
+    return (
+      <Link to={`/account/${accountState.keyPair.pubKey.toString('hex')}`} style={{ textDecoration: 'none' }}>
+        <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
+        <NavText message="Your Account" />
+      </Link>
+    );
+  }
+
   return (
     <div className={classes.wrapper}>
       <NavItem onClick={toggleOpenInfo}>
         <InfoIcon color="primary" className={`${classes.icon} ${classes.navIcon}`} />
         <NavText message="Service Info" />
       </NavItem>
-      <NavItem onClick={() => setLoginOpen(true)}>
-        <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
-        <NavText message={accountState.isChecked && !accountState.accountDetail ? 'Login' : 'Your Account'} />
-      </NavItem>
+      {renderAccountNavigation()}
       <About open={infoOpen} onClose={handleCloseInfo} />
-      <Stake open={loginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   );
 };
