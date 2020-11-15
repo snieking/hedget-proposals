@@ -12,7 +12,11 @@ import config from './config';
 import Content from './Content';
 import ApplicationState from './core/redux/application-state';
 import { AccountDetail } from './core/redux/account/account.state';
-import { checkAmountStaked, checkCoreAccount } from './core/redux/account/account.actions';
+import {
+  checkAmountStaked,
+  checkCoreAccount,
+  checkEthAddress
+} from './core/redux/account/account.actions';
 import { initLogger } from './util/log-util';
 import SnackbarHolder from './core/snackbar/SnackbarHolder';
 
@@ -21,6 +25,7 @@ interface Props {
   accountDetail: AccountDetail;
   checkCoreAccount: typeof checkCoreAccount;
   checkAmountStaked: typeof checkAmountStaked;
+  checkEthAddress: typeof checkEthAddress;
 }
 
 const useStyles = makeStyles({
@@ -58,6 +63,7 @@ const App: React.FunctionComponent<Props> = (props) => {
     if (props.accountDetail) {
       props.checkCoreAccount();
       props.checkAmountStaked();
+      props.checkEthAddress();
     }
   }, [props]);
 
@@ -89,6 +95,7 @@ const mapStateToProps = (store: ApplicationState) => {
 const mapDispatchToProps = {
   checkCoreAccount,
   checkAmountStaked,
+  checkEthAddress,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

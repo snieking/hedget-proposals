@@ -6,6 +6,8 @@ export enum AccountActionTypes {
   CHECK_AMOUNT_STAKED = 'ACCOUNT/CHECK_AMOUNT_STAKED',
   SET_AMOUNT_STAKED = 'ACCOUNT/SET_AMOUNT_STAKED',
   SET_ACCOUNT_DETAIL = 'ACCOUNT/SET_DETAIL',
+  CHECK_ETH_ADDRESS = 'ACCOUNT/CHECK_ETH_ADDRESS',
+  SET_ETH_ADDRESS = 'ACCOUNT/SET_ETH_ADDRESS'
 }
 
 export interface AccountDetail {
@@ -17,6 +19,7 @@ export interface AccountState {
   isChecked: boolean;
   keyPair: KeyPair;
   accountDetail?: AccountDetail;
+  ethAddress: string;
   isCoreAccount: boolean;
   amountStaked: number;
 }

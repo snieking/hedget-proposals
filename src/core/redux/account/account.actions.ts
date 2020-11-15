@@ -11,3 +11,7 @@ export const setCoreAccount = createAction(AccountActionTypes.SET_CORE_ACCOUNT, 
 export const checkAmountStaked = createAction(AccountActionTypes.CHECK_AMOUNT_STAKED);
 
 export const setAmountStaked = createAction(AccountActionTypes.SET_AMOUNT_STAKED, withPayloadType<number>());
+
+export const checkEthAddress = createAction(AccountActionTypes.CHECK_ETH_ADDRESS);
+
+export const setEthAddress = createAction(AccountActionTypes.SET_ETH_ADDRESS, withPayloadType<string>());

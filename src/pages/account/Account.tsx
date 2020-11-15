@@ -8,6 +8,8 @@ import { getPollParticipationsByAddress, getProposalsByAddress } from '../../cor
 import BackToProposals from '../../shared/BackToProposals';
 import ProposalOverviewItem from '../proposals/overview/ProposalOverviewItem';
 import StatusChip from '../../shared/StatusChip';
+import AccountDetailSection from './AccountDetailSection';
+import SectionDivider from '../../shared/SectionDivider';
 
 interface MatchParams {
   address: string;
@@ -19,12 +21,13 @@ const useStyles = makeStyles({
   },
   voteWrapper: {
     marginBottom: '15px',
+    marginLeft: '4px',
   },
   voteTitle: {
-    marginBottom: '5px',
+    marginBottom: '15px',
   },
   voteStatus: {
-    marginRight: '10px',
+    marginRight: '15px',
   },
 });
 
@@ -46,14 +49,14 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
   }, [props.match.params.address]);
 
   const renderCreatedProposals = () => {
-    return value === 0 && proposals.map((p) => <ProposalOverviewItem proposal={p} hideDetails />);
+    return value === 1 && proposals.map((p) => <ProposalOverviewItem key={`created:${p.id}`} proposal={p} hideDetails />);
   };
 
   const renderPollParticipations = () => {
     return (
-      value === 1 &&
+      value === 0 &&
       pollParticipation.map((p) => (
-        <div className={classes.voteWrapper}>
+        <div className={classes.voteWrapper} key={`participation:${p.id}`}>
           <Typography variant="h6" component="p" className={classes.voteTitle}>
             <b>{p.id}:</b> {p.title}
           </Typography>
@@ -69,6 +72,8 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
   return (
     <>
       <BackToProposals />
+      <AccountDetailSection address={props.match.params.address} />
+      <SectionDivider />
       <Tabs
         value={value}
         indicatorColor="primary"
@@ -77,8 +82,8 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
         aria-label="disabled tabs example"
         className={classes.tabMenu}
       >
-        <Tab label="Created proposals" />
         <Tab label="Votes" />
+        <Tab label="Created proposals" />
       </Tabs>
       {renderCreatedProposals()}
       {renderPollParticipations()}
