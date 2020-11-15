@@ -62,7 +62,7 @@ const Navigation: React.FunctionComponent = () => {
     }
 
     return (
-      <Link to={`/account/${accountState.keyPair.pubKey.toString('hex')}`} style={{ textDecoration: 'none' }}>
+      <Link to={`/account/${accountState.ethAddress}`} style={{ textDecoration: 'none' }}>
         <AccountCircle color="primary" className={`${classes.icon} ${classes.navIcon}`} />
         <NavText message="Your Account" />
       </Link>

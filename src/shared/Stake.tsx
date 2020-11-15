@@ -85,8 +85,8 @@ const StakeMain: React.FunctionComponent<{ onClose: () => void }> = ({ onClose }
 
       log.debug(`Login response: ${response}`);
       if (response.status === 'SUCCESS') {
+        // AccountID is sha256 of selected address text
         const accountID = util.sha256(selectedAddress.toLowerCase()).toString('hex');
-        // yes, accountID is sha256 of selected address text
         dispatch(
           setAccountDetail({
             accountID,
