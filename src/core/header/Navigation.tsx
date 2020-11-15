@@ -73,7 +73,7 @@ const Navigation: React.FunctionComponent = () => {
     <div className={classes.wrapper}>
       <NavItem onClick={toggleOpenInfo}>
         <InfoIcon color="primary" className={`${classes.icon} ${classes.navIcon}`} />
-        <NavText message="Service Info" />
+        <NavText message="Info" />
       </NavItem>
       {renderAccountNavigation()}
       <About open={infoOpen} onClose={handleCloseInfo} />
