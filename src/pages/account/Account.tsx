@@ -20,6 +20,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import { Link } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import StarsIcon from '@material-ui/icons/Stars';
+import { isCoreEthAccount } from '../../core/services/account.service';
 
 interface MatchParams {
   address: string;
@@ -59,6 +60,7 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
   const [proposals, setProposals] = useState<ProposalOverview[]>([]);
   const [pollParticipation, setPollParticipations] = useState<PollParticipation[]>([]);
   const [value, setValue] = React.useState(0);
+  const [isCoreUser, setCoreUser] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -68,6 +70,7 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
     if (props.match.params.address) {
       getProposalsByAddress(props.match.params.address, 0).then((p) => setProposals(p));
       getPollParticipationsByAddress(props.match.params.address).then((p) => setPollParticipations(p));
+      isCoreEthAccount(props.match.params.address).then(isCore => setCoreUser(isCore));
     }
   }, [props.match.params.address]);
 
@@ -102,7 +105,7 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
           <LinkIcon fontSize="large" className={classes.accountIcon} />
           <Typography variant="h6"
                       component="span">{props.match.params.address}</Typography>
-          <StarsIcon className={classes.coreIcon} color="secondary" />
+          {isCoreUser && (<StarsIcon className={classes.coreIcon} color="secondary" />)}
         </Link>
       </Tooltip>
       <AccountDetailSection address={props.match.params.address} />

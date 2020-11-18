@@ -56,8 +56,6 @@ jobs:
         run: npm run build-dev
         if: github.ref == 'refs/heads/develop'
 
-      - uses: chrislennon/action-aws-cli@v1.1
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
