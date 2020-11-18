@@ -100,13 +100,13 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
     <>
       <BackToProposals />
       <Tooltip title="View on Etherscan">
-        <Link to={`https://etherscan.io/address/${props.match.params.address}`}
+        <a href={`https://etherscan.io/address/${props.match.params.address}`}
               className={classes.link}>
           <LinkIcon fontSize="large" className={classes.accountIcon} />
           <Typography variant="h6"
                       component="span">{props.match.params.address}</Typography>
           {isCoreUser && (<StarsIcon className={classes.coreIcon} color="secondary" />)}
-        </Link>
+        </a>
       </Tooltip>
       <AccountDetailSection address={props.match.params.address} />
       <SectionDivider />
