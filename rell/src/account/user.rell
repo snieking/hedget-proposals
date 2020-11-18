@@ -6,7 +6,7 @@ import lib.ft3.account.{  account,
 	rule_variable,
 	rule_operator,
 	rule_expression,
-	rl_state,	
+	rl_state,
 	auth_descriptor
 };
 
@@ -36,9 +36,9 @@ struct module_args {
 
 function _add_auth_descriptor (account, auth_descriptor) {
      val descriptor_id = auth_descriptor.hash();
-     
+
      analyze_auth_descriptor_rules(auth_descriptor.rules, 0);
-     
+
      val account_auth_descriptor = create account_auth_descriptor (
         account,
         descriptor_id,
@@ -46,28 +46,28 @@ function _add_auth_descriptor (account, auth_descriptor) {
         args = auth_descriptor.args.to_gtv().to_bytes(),
         rules = auth_descriptor.rules.to_gtv().to_bytes()
      );
-     
+
      for (participant in auth_descriptor.participants) {
         create auth_descriptor_participant(account_auth_descriptor, id = participant);
      }
-     
+
      setup_auth_descriptor_variables(account_auth_descriptor);
 }
 
 function _create_account (id: byte_array, auth_descriptor): account {
 	val account = create account(id);
-	
+
 	_add_auth_descriptor(account, auth_descriptor);
-	
+
 	val max_points = my_blockchain_info.rate_limit_max_points;
 	val recovery_time = my_blockchain_info.rate_limit_recovery_time;
 	val points_at_start = my_blockchain_info.rate_limit_points_at_account_creation;
- 
+
 	create rl_state(
-		account, 
-		.points = points_at_start, 
-		.last_update = op_context.last_block_time, 
-		max_points, 
+		account,
+		.points = points_at_start,
+		.last_update = op_context.last_block_time,
+		max_points,
 		recovery_time
 	);
 
@@ -84,7 +84,7 @@ operation login_eth_user (eth_address: text, auth_descriptor, valid_until: times
 			, auth_descriptor );
 		eth_account = create eth_account (eth_address, account);
 	} else {
-		_add_auth_descriptor(eth_account.account, auth_descriptor);		
+		_add_auth_descriptor(eth_account.account, auth_descriptor);
 	}
 	delete eth_account_state @? { eth_account };
 	create eth_account_state (
@@ -113,7 +113,7 @@ query get_eth_account_state (eth_address: text, pubkey) {
 			(ad: account_auth_descriptor, ap: auth_descriptor_participant) @?
 			{ ad.account == ft3_acc, ap.account_auth_descriptor == ad, ap.id == pubkey }))
 				return null;
-		
+
 		return eth_account_state @? { acc } ( .valid_until, .staked_amount );
 	}
 	return null;
@@ -121,6 +121,11 @@ query get_eth_account_state (eth_address: text, pubkey) {
 
 query is_core_user (id: byte_array): boolean {
 	val acc = eth_account @{ .account.id == id };
+	return _is_core_user(acc);
+}
+
+query is_core_eth_user (eth_addr: text): boolean {
+	val acc = eth_account @{ .address == eth_addr };
 	return _is_core_user(acc);
 }
 

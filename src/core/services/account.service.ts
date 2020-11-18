@@ -6,6 +6,10 @@ export function isCoreAccount(account: AccountDetail): Promise<boolean> {
   return query('is_core_user', { id: account.accountID }).then((bool: number) => bool !== 0);
 }
 
+export function isCoreEthAccount(address: string): Promise<boolean> {
+  return query('is_core_eth_user', { eth_addr: address }).then((bool: number) => bool !== 0);
+}
+
 export function amountStaked(account: AccountDetail): Promise<number> {
   return query('amount_staked', { id: account.accountID });
 }
