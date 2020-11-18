@@ -21,6 +21,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import StarsIcon from '@material-ui/icons/Stars';
 import { isCoreEthAccount } from '../../core/services/account.service';
 import { formatedAuthor } from '../proposals/util';
+import { Link } from 'react-router-dom';
+import {
+  COLOR_CHROMIA_LIGHT,
+  COLOR_CHROMIA_LIGHTER
+} from '../../core/dynamic-theme/DefaultTheme';
 
 interface MatchParams {
   address: string;
@@ -44,8 +49,15 @@ const useStyles = makeStyles({
     marginBottom: '15px'
   },
   voteWrapper: {
-    marginBottom: '15px',
-    marginLeft: '4px'
+
+  },
+  voteInnerWrapper: {
+    margin: '4px',
+    backgroundColor: COLOR_CHROMIA_LIGHTER,
+    '&:hover': {
+      backgroundColor: COLOR_CHROMIA_LIGHT,
+    },
+    marginBottom: '10px',
   },
   voteTitle: {
     marginBottom: '15px'
@@ -83,15 +95,20 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
     return (
       value === 0 &&
       pollParticipation.map((p) => (
-        <div className={classes.voteWrapper} key={`participation:${p.id}`}>
-          <Typography variant="h6" component="p" className={classes.voteTitle}>
-            <b>{p.id}:</b> {p.title}
-          </Typography>
-          <StatusChip status={p.status} className={classes.voteStatus} />
-          <Typography variant="body2" component="span">
-            <b>{p.amount} HGET</b> for &quot;{p.option}&quot;
-          </Typography>
-        </div>
+        <Link to={`/proposal/${p.id}`}
+              className={`${classes.voteWrapper} ${classes.link}`}
+              key={`participation:${p.id}`}>
+          <div className={classes.voteInnerWrapper}>
+            <Typography variant="h6" component="p"
+                        className={classes.voteTitle}>
+              <b>{p.id}:</b> {p.title}
+            </Typography>
+            <StatusChip status={p.status} className={classes.voteStatus} />
+            <Typography variant="body2" component="span">
+              <b>{p.amount} HGET</b> for &quot;{p.option}&quot;
+            </Typography>
+          </div>
+        </Link>
       ))
     );
   };
@@ -101,11 +118,12 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
       <BackToProposals />
       <Tooltip title="View on Etherscan">
         <a href={`https://etherscan.io/address/${props.match.params.address}`}
-              className={classes.link}>
+           className={classes.link}>
           <LinkIcon fontSize="large" className={classes.accountIcon} />
           <Typography variant="h6"
                       component="span">{formatedAuthor(props.match.params.address)}</Typography>
-          {isCoreUser && (<StarsIcon className={classes.coreIcon} color="secondary" />)}
+          {isCoreUser && (
+            <StarsIcon className={classes.coreIcon} color="secondary" />)}
         </a>
       </Tooltip>
       <AccountDetailSection address={props.match.params.address} />
