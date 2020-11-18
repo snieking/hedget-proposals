@@ -20,6 +20,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import Tooltip from '@material-ui/core/Tooltip';
 import StarsIcon from '@material-ui/icons/Stars';
 import { isCoreEthAccount } from '../../core/services/account.service';
+import { formatedAuthor } from '../proposals/util';
 
 interface MatchParams {
   address: string;
@@ -103,7 +104,7 @@ const Account: React.FunctionComponent<RouteComponentProps<MatchParams>> = (prop
               className={classes.link}>
           <LinkIcon fontSize="large" className={classes.accountIcon} />
           <Typography variant="h6"
-                      component="span">{props.match.params.address}</Typography>
+                      component="span">{formatedAuthor(props.match.params.address)}</Typography>
           {isCoreUser && (<StarsIcon className={classes.coreIcon} color="secondary" />)}
         </a>
       </Tooltip>
