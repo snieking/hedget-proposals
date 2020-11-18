@@ -17,7 +17,6 @@ import StatusChip from '../../shared/StatusChip';
 import AccountDetailSection from './AccountDetailSection';
 import SectionDivider from '../../shared/SectionDivider';
 import LinkIcon from '@material-ui/icons/Link';
-import { Link } from 'react-router-dom';
 import Tooltip from '@material-ui/core/Tooltip';
 import StarsIcon from '@material-ui/icons/Stars';
 import { isCoreEthAccount } from '../../core/services/account.service';
