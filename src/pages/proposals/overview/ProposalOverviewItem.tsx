@@ -39,13 +39,17 @@ const useStyles = makeStyles({
   },
   detail: {
     position: 'relative',
-    top: '6px',
+    top: '-2px',
     display: 'inline',
     marginRight: '15px',
   },
+  icon: {
+    position: 'relative',
+    top: '7px',
+  },
   iconText: {
     position: 'relative',
-    top: -6,
+    top: '1px',
     left: 2,
     maxWidth: '2ch',
     marginLeft: '2px',
@@ -65,7 +69,7 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
           <StatusChip status={props.proposal.status} className={classes.chip} />
           {!props.hideDetails && (
             <div className={classes.detail}>
-              <CategoryIcon />
+              <CategoryIcon className={classes.icon} />
               <Typography variant="body2" component="span" className={classes.iconText}>
                 {props.proposal.category}
               </Typography>
@@ -73,14 +77,16 @@ const ProposalOverviewItem: React.FunctionComponent<Props> = (props) => {
           )}
           {!props.hideDetails && (
             <div className={classes.detail}>
-              <PersonIcon />
+              <PersonIcon className={classes.icon} />
               <Typography variant="body2" component="span" className={classes.iconText}>
                 {formatedAuthor(props.proposal.author)}
               </Typography>
             </div>
           )}
           <div className={classes.detail}>
-            <TimeRemainingDetail endTimestamp={props.proposal.endTimestamp} iconTextClassName={classes.iconText} />
+            <TimeRemainingDetail endTimestamp={props.proposal.endTimestamp}
+                                 iconClassName={classes.icon}
+                                 iconTextClassName={classes.iconText} />
           </div>
         </div>
       </div>
